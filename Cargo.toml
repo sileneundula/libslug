@@ -1,0 +1,8 @@
+[package]
+name = "libslug"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Curve25519 ECIES Encryption
+ecies-ed25519 = {version = "0.5.1", feature=["serde"]}
