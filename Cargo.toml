@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # Curve25519 ECIES Encryption
-ecies-ed25519 = {version = "0.5.1", feature=["serde"]}
+ecies-ed25519 = {version = "0.5.1", features=["serde"]}
 
 # Randomness
 rand = "0.7.3"

@@ -7,6 +7,9 @@ use serde::{Serialize,Deserialize};
 use zeroize::{Zeroize,ZeroizeOnDrop};
 use std::fmt;
 
+/// # Message Type
+/// 
+/// An allocated vector of bytes used as the message type. Implements a UTF-8 display method for displaying characters and multiple other methods. Zeroize by default.
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq,Zeroize,ZeroizeOnDrop)]
 pub struct Message {
     message: Vec<u8>,

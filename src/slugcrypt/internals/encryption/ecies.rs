@@ -6,36 +6,50 @@ use ecies_ed25519::PublicKey;
 use ecies_ed25519::SecretKey;
 use ecies_ed25519::Error;
 
+// SlugCrypt Structs
+use crate::slugcrypt::internals::ciphertext::CipherText;
+use crate::slugcrypt::internals::messages::Message;
+
+use serde::{Serialize,Deserialize};
+use zeroize::{Zeroize,ZeroizeOnDrop};
+
 //use rand::RngCore;
 use rand::rngs::OsRng;
 //use rand::CryptoRng;
 pub struct ECIESEncrypt;
 pub struct ECIESDecrypt;
 
+#[derive(Serialize,Deserialize)]
 pub struct ECKeyPair {
     pub public_key: PublicKey,
     pub secret_key: SecretKey,
 }
 
+#[derive(Serialize,Deserialize)]
 pub struct ECPublicKey {
     pub public_key: PublicKey,
 }
 
+#[derive(Serialize,Deserialize)]
 pub struct ECSecretKey {
     pub secret_key: SecretKey,
 }
 
-pub struct ECCipherText {
-    pub ciphertext: Vec<u8>,
-}
-
 impl ECIESEncrypt {
-    pub fn encrypt<T: AsRef<[u8]>>(pk: ECPublicKey, msg: T) -> Result<Vec<u8>,Error>  {
+    pub fn encrypt<T: AsRef<[u8]>>(pk: ECPublicKey, msg: T) -> Result<CipherText,Error>  {
         let mut csprng = OsRng;
 
         let ciphertext = ecies_ed25519::encrypt(&pk.public_key, msg.as_ref(), &mut csprng)?;
 
-        return Ok(ciphertext)
+        return Ok(CipherText::from_bytes(&ciphertext))
+    }
+}
+
+impl ECIESDecrypt {
+    pub fn decrypt(sk: ECSecretKey, ciphertext: CipherText) -> Result<Message,Error> {
+        let decoded_msg = ecies_ed25519::decrypt(&sk.secret_key, ciphertext.as_bytes())?;
+
+        Ok(Message::new(decoded_msg))
     }
 }
 
@@ -106,14 +120,12 @@ impl ECSecretKey {
             public_key
         }
     }
-    pub fn encrypt<T: AsRef<[u8]>>(&self, pk: ECPublicKey, msg: T) -> Result<ECCipherText,Error> {
+    pub fn encrypt<T: AsRef<[u8]>>(pk: ECPublicKey, msg: T) -> Result<CipherText,Error> {
         let mut rng = OsRng;
 
         let ciphertext = ecies_ed25519::encrypt(&pk.public_key, msg.as_ref(), &mut rng)?;
 
-        return Ok(ECCipherText{
-            ciphertext,
-        })
+        return Ok(CipherText::from_bytes(&ciphertext))
     }
 }
 
