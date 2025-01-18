@@ -19,3 +19,12 @@ argon2 = "0.5.3"
 
 # Security
 subtle = "2.6.1"
+subtle-encoding = "0.5.1"
+zeroize = "1.8.1"
+
+# Serialization
+serde = { version = "1.0.0", features=["derive"] }
+serde_yaml = "0.9.34"
+
+# Encoding
+base58 = "0.2.0"

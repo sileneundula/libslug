@@ -9,6 +9,8 @@ use ecies_ed25519::Error;
 //use rand::RngCore;
 use rand::rngs::OsRng;
 //use rand::CryptoRng;
+pub struct ECIESEncrypt;
+pub struct ECIESDecrypt;
 
 pub struct ECKeyPair {
     pub public_key: PublicKey,
@@ -25,6 +27,16 @@ pub struct ECSecretKey {
 
 pub struct ECCipherText {
     pub ciphertext: Vec<u8>,
+}
+
+impl ECIESEncrypt {
+    pub fn encrypt<T: AsRef<[u8]>>(pk: ECPublicKey, msg: T) -> Result<Vec<u8>,Error>  {
+        let mut csprng = OsRng;
+
+        let ciphertext = ecies_ed25519::encrypt(&pk.public_key, msg.as_ref(), &mut csprng)?;
+
+        return Ok(ciphertext)
+    }
 }
 
 impl ECKeyPair {
