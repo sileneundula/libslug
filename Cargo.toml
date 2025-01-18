@@ -6,3 +6,16 @@ edition = "2021"
 [dependencies]
 # Curve25519 ECIES Encryption
 ecies-ed25519 = {version = "0.5.1", feature=["serde"]}
+
+# Randomness
+rand = "0.7.3"
+rand_core = "0.6.4"
+
+# BIP39
+tiny-bip39 = "2.0.0"
+
+# Password Deriviation
+argon2 = "0.5.3"
+
+# Security
+subtle = "2.6.1"
