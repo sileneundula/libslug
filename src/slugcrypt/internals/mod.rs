@@ -1,6 +1,9 @@
 /// ECIES over Curve25519
 pub mod encryption;
 
+/// XChaCha20-Poly1305
+pub mod encrypt;
+
 /// Cryptographically Secure Randomness
 pub mod csprng;
 

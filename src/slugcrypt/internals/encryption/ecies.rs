@@ -11,19 +11,12 @@ use crate::slugcrypt::internals::ciphertext::CipherText;
 use crate::slugcrypt::internals::messages::Message;
 
 use serde::{Serialize,Deserialize};
-use zeroize::{Zeroize,ZeroizeOnDrop};
 
 //use rand::RngCore;
 use rand::rngs::OsRng;
 //use rand::CryptoRng;
 pub struct ECIESEncrypt;
 pub struct ECIESDecrypt;
-
-#[derive(Serialize,Deserialize)]
-pub struct ECKeyPair {
-    pub public_key: PublicKey,
-    pub secret_key: SecretKey,
-}
 
 #[derive(Serialize,Deserialize)]
 pub struct ECPublicKey {
@@ -51,19 +44,6 @@ impl ECIESDecrypt {
 
         Ok(Message::new(decoded_msg))
     }
-}
-
-impl ECKeyPair {
-    pub fn generate() -> ECKeyPair {
-        let mut rng = OsRng;
-
-        let (secret_key,public_key) = ecies_ed25519::generate_keypair(&mut rng);
-        ECKeyPair {
-            public_key,
-            secret_key,
-        }
-    }
-    
 }
 
 impl ECPublicKey {
@@ -127,12 +107,7 @@ impl ECSecretKey {
 
         return Ok(CipherText::from_bytes(&ciphertext))
     }
-}
-
-
-
-impl Default for ECKeyPair {
-    fn default() -> Self {
-        Self::generate()
+    pub fn decrypt(self, ciphertext: CipherText) -> Result<Message,Error> {
+        ECIESDecrypt::decrypt(self, ciphertext)
     }
 }

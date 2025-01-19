@@ -10,7 +10,7 @@ fn main() {
     let sk_alice: ECSecretKey = ECSecretKey::generate();
     
     // The Message As A UTF-8 str.
-    let msg_alice: &str = "Hello, this is a UTF-8 String to be encrypted to ciphertext using AES-GCM, SHA2, and HKDF.";
+    let msg_alice: &str = "Hello, this is a UTF-8 String to be encrypted to ciphertext using AES-GCM, SHA3, and HKDF.";
     
     // Generate Secret Key For Bob (ECIES-CURVE25519) from OSCSPRNG
     let sk_bob: ECSecretKey = ECSecretKey::generate();
