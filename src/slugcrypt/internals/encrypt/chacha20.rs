@@ -1,5 +1,5 @@
 use chacha20poly1305::{
-    aead::{Aead, KeyInit, OsRng}, AeadCore, Error, Key, Nonce, XChaCha20Poly1305 // Cipher, key, and nonce types
+    aead::{Aead, KeyInit, OsRng}, XNonce, AeadCore, Error, Key, Nonce, XChaCha20Poly1305 // Cipher, key, and nonce types
 };
 
 use rand::CryptoRng;
@@ -13,7 +13,7 @@ pub struct EncryptionKey {
 
 #[derive(Zeroize,ZeroizeOnDrop)]
 pub struct EncryptionNonce {
-    nonce: [u8;25]
+    nonce: Vec<u8>
 }
 
 #[derive(Zeroize,ZeroizeOnDrop)]
@@ -30,9 +30,6 @@ impl EncryptionCipherText {
 impl EncryptionNonce {
     pub fn as_bytes(&self) -> &[u8] {
         &self.nonce
-    }
-    pub fn as_array(&self) -> [u8;25] {
-        return self.nonce
     }
 }
 
@@ -65,7 +62,9 @@ impl SlugEncrypt {
         let nonce = XChaCha20Poly1305::generate_nonce(&mut OsRng);
         let cipher = XChaCha20Poly1305::new(Key::from_slice(key.as_bytes()));
 
-        let nonce_array: [u8;25] = nonce.as_slice().try_into().unwrap();
+        //let mut nonce_array: [u8;24] = [0u8;24];
+
+        let nonce_vec = nonce.as_slice().to_vec();
         
 
         let ciphertext = cipher.encrypt(&nonce, data.as_ref())?;
@@ -75,13 +74,13 @@ impl SlugEncrypt {
                 ciphertext: ciphertext
             },
             EncryptionNonce {
-                nonce: nonce_array
+                nonce: nonce_vec
             })
         )
     }
     pub fn decrypt(key: EncryptionKey, nonce: EncryptionNonce, ciphertext: EncryptionCipherText) -> Result<Vec<u8>,chacha20poly1305::Error> {
         let cipher = XChaCha20Poly1305::new(Key::from_slice(key.as_bytes()));
-        let decrypted = cipher.decrypt(Nonce::from_slice(&nonce.as_array()),ciphertext.as_bytes())?;
+        let decrypted = cipher.decrypt(XNonce::from_slice(&nonce.as_bytes()),ciphertext.as_bytes())?;
 
         return Ok(decrypted)
     }
