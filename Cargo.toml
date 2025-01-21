@@ -38,3 +38,7 @@ ml-kem = "0.2.1"
 
 # Symmetric Encryption
 chacha20poly1305 = "0.10.1"
+
+# PQ Signatures
+pqcrypto-sphincsplus = "0.7.0"
+pqcrypto-traits = "0.3.5"

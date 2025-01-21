@@ -12,3 +12,5 @@ pub mod bip39;
 
 pub mod messages;
 pub mod ciphertext;
+
+pub mod signature;
