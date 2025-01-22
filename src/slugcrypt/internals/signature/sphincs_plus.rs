@@ -1,3 +1,4 @@
+use pqcrypto_sphincsplus::sphincsshake256ssimple::{PublicKey as PublicKeySphincs, SecretKey as SecretKeySphincs};
 use pqcrypto_sphincsplus::sphincsshake256ssimple::*;
 use pqcrypto_traits::{Error,Result,sign::{PublicKey,SecretKey,DetachedSignature,SignedMessage}};
 
@@ -24,5 +25,27 @@ impl SPHINCSSecretKey {
         sk_array.copy_from_slice(keypair.1.as_bytes());
 
         return (SPHINCSPublicKey{pk: pk_array},SPHINCSSecretKey{sk: sk_array})
+    }
+}
+
+impl SPHINCSPublicKey {
+    pub fn from_bytes(bytes: &[u8]) -> SPHINCSPublicKey {
+        let mut pk_array: [u8;64] = [0u8;64];
+
+        pk_array.copy_from_slice(bytes);
+        
+        return SPHINCSPublicKey {
+            pk: pk_array
+        }
+    }
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.pk
+    }
+    pub fn to_usable_type(&self) -> PublicKeySphincs {
+        let pk = PublicKeySphincs::from_bytes(self.as_bytes()).unwrap();
+        return pk
+    }
+    pub fn verify<T: AsRef<[u8]>>(&self, msg: T, sig: SPHINCSSignature) {
+        verify_detached_signature(sig, msg, pk)
     }
 }
