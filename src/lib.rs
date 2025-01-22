@@ -10,3 +10,5 @@ pub mod x59;
 /// Constants
 pub mod constants;
 
+pub mod errors;
+
