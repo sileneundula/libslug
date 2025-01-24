@@ -1,7 +1,11 @@
-use pqcrypto_sphincsplus::sphincsshake256ssimple::{PublicKey as PublicKeySphincs, SecretKey as SecretKeySphincs};
+use std::primitive;
+
+use pqcrypto_sphincsplus::sphincsshake256ssimple::{PublicKey as PublicKeySphincs, SecretKey as SecretKeySphincs, DetachedSignature as DetachedSignatureSphincs};
 use pqcrypto_sphincsplus::sphincsshake256ssimple::*;
+use pqcrypto_traits::sign::VerificationError;
 use pqcrypto_traits::{Error,Result,sign::{PublicKey,SecretKey,DetachedSignature,SignedMessage}};
 use crate::errors::SlugErrors;
+use crate::slugcrypt::internals::messages::Message;
 
 pub struct SPHINCSPublicKey {
     pk: [u8;64]
@@ -49,12 +53,21 @@ impl SPHINCSPublicKey {
     pub fn as_bytes(&self) -> &[u8] {
         &self.pk
     }
-    pub fn to_usable_type(&self) -> PublicKeySphincs {
-        let pk = PublicKeySphincs::from_bytes(self.as_bytes()).unwrap();
-        return pk
+    pub fn to_usable_type(&self) -> std::result::Result<PublicKeySphincs,SlugErrors> {
+        let pk = PublicKeySphincs::from_bytes(self.as_bytes());
+
+        if pk.is_err() {
+            return Err(SlugErrors::InvalidLengthFromBytes)
+        }
+        else {
+            return Ok(pk.unwrap())
+        }
     }
-    pub fn verify<T: AsRef<[u8]>>(&self, msg: T, sig: SPHINCSSignature) {
-        verify_detached_signature(sig, msg, pk);
+    pub fn verify(&self, msg: Message, sig: SPHINCSSignature) -> std::result::Result<bool,VerificationError> {
+        let verification = verify_detached_signature(&sig.to_usable_type().unwrap(), msg.as_bytes(), &self.to_usable_type().unwrap())?;
+
+        return Ok(true)
+
     }
 }
 
@@ -72,5 +85,48 @@ impl SPHINCSSecretKey {
         else {
             return Err(SlugErrors::InvalidLengthFromBytes)
         }
+    }
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.sk
+    }
+    pub fn sign(&self, msg: Message) -> std::result::Result<SPHINCSSignature,SlugErrors> {
+        let bytes = detached_sign(msg.as_bytes(), &self.to_usable_type().unwrap());
+
+        let signature = SPHINCSSignature::from_bytes(bytes.as_bytes())?;
+
+        return Ok(signature)
+    }
+    fn to_usable_type(&self) -> std::result::Result<SecretKeySphincs,SlugErrors> {
+        let sk = SecretKeySphincs::from_bytes(self.as_bytes());
+
+        if sk.is_err() {
+            return Err(SlugErrors::InvalidLengthFromBytes)
+        }
+        else {
+            return Ok(sk.unwrap())
+        }
+    }
+}
+
+impl SPHINCSSignature {
+    pub fn as_bytes(&self) -> &[u8] {
+        self.as_bytes()
+    }
+    pub fn from_bytes(bytes: &[u8]) -> std::result::Result<SPHINCSSignature,SlugErrors> {
+        let mut signature_array: [u8;29_792] = [0u8;29_792];
+
+        if bytes.len() == 29_792 {
+            signature_array.copy_from_slice(bytes);
+
+            return Ok(SPHINCSSignature { signature: signature_array })
+        }
+        else {
+            return Err(SlugErrors::InvalidLengthFromBytes)
+        }
+    }
+    fn to_usable_type(&self) -> std::result::Result<DetachedSignatureSphincs,Error> {
+        let signature = DetachedSignatureSphincs::from_bytes(self.as_bytes())?;
+
+        return Ok(signature)
     }
 }
