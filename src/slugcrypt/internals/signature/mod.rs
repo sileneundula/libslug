@@ -1,4 +1,4 @@
-/// SPHINCS+ (SHAKE256) (255bit security)
+/// SPHINCS+ (SHAKE256) (255bit security) (smaller signature version)
 pub mod sphincs_plus;
 
 /// ED25519 Signature
