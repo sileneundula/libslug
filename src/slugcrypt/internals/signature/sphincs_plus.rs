@@ -16,7 +16,7 @@ pub struct SPHINCSSecretKey {
 }
 
 pub struct SPHINCSSignature {
-    signature: [u8;29_792]
+    signature: [u8;29_792],
 }
 
 impl SPHINCSSecretKey {
@@ -109,8 +109,11 @@ impl SPHINCSSecretKey {
 }
 
 impl SPHINCSSignature {
+    pub fn to_bytes(&self) -> Vec<u8> {
+        self.signature.to_vec()
+    }
     pub fn as_bytes(&self) -> &[u8] {
-        self.as_bytes()
+        &self.as_bytes()
     }
     pub fn from_bytes(bytes: &[u8]) -> std::result::Result<SPHINCSSignature,SlugErrors> {
         let mut signature_array: [u8;29_792] = [0u8;29_792];
@@ -125,8 +128,24 @@ impl SPHINCSSignature {
         }
     }
     fn to_usable_type(&self) -> std::result::Result<DetachedSignatureSphincs,Error> {
-        let signature = DetachedSignatureSphincs::from_bytes(self.as_bytes())?;
+        let signature = DetachedSignatureSphincs::from_bytes(&self.to_bytes())?;
 
         return Ok(signature)
     }
+}
+
+#[test]
+fn keypair_ls() {
+    let keypair = SPHINCSSecretKey::generate();
+
+    let message: Message = Message::new("This is a signed message");
+
+    println!("Public Key Length: {}",keypair.0.as_bytes().len());
+    println!("Secret Key Length: {}",keypair.1.as_bytes().len());
+
+    let signature = keypair.1.sign(message).unwrap();
+
+    let length: usize = signature.to_bytes().len();
+
+    println!("SPHINCS+ Signature Length: {}", length);
 }
