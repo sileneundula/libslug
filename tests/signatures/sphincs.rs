@@ -7,7 +7,7 @@ fn sphincs_sign() {
     let message = Message::new("This is a message struct that uses UTF-8 to be signed by SPHINCS+");
     
     // Keypair
-    let keypair = SPHINCSSecretKey::generate();
+    let keypair: (SPHINCSPublicKey, SPHINCSSecretKey) = SPHINCSSecretKey::generate();
 
 
     // Signing Message

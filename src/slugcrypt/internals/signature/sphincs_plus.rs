@@ -6,15 +6,19 @@ use pqcrypto_traits::sign::VerificationError;
 use pqcrypto_traits::{Error,Result,sign::{PublicKey,SecretKey,DetachedSignature,SignedMessage}};
 use crate::errors::SlugErrors;
 use crate::slugcrypt::internals::messages::Message;
+use zeroize::{Zeroize,ZeroizeOnDrop};
 
+#[derive(Debug,Zeroize,ZeroizeOnDrop)]
 pub struct SPHINCSPublicKey {
     pk: [u8;64]
 }
 
+#[derive(Debug,Zeroize,ZeroizeOnDrop)]
 pub struct SPHINCSSecretKey {
     sk: [u8;128]
 }
 
+#[derive(Debug,Zeroize,ZeroizeOnDrop)]
 pub struct SPHINCSSignature {
     signature: [u8;29_792],
 }

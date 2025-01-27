@@ -18,7 +18,7 @@ use rand::rngs::OsRng;
 pub struct ECIESEncrypt;
 pub struct ECIESDecrypt;
 
-#[derive(Serialize,Deserialize)]
+#[derive(Clone,Serialize,Deserialize)]
 pub struct ECPublicKey {
     pub public_key: PublicKey,
 }
