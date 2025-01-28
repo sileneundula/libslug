@@ -4,6 +4,19 @@
 
 use securerand_rs::securerand::SecureRandom;
 
+/// # SlugCSPRNG
+/// 
+/// A CSPRNG using CHACHA20RNG and ARGON2ID
+/// 
+/// ```rust
+/// use libslug::slugcrypt::csprng::SlugCSPRNG;
+/// 
+/// fn main() {
+///     let password: &str = "Thisisapassword";
+/// 
+///     let csprng = SlugCSPRNG::new(password);
+/// }
+/// ```
 pub struct SlugCSPRNG;
 
 impl SlugCSPRNG {
