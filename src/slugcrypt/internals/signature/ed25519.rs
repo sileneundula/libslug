@@ -10,7 +10,11 @@ use zeroize::{Zeroize,ZeroizeOnDrop};
 use serde::{Serialize,Deserialize};
 use crate::slugcrypt::internals::csprng::SlugCSPRNG;
 use crate::errors::SlugErrors;
+use subtle_encoding::hex;
+use subtle_encoding::Error;
 
+use base32;
+use base58::{FromBase58,ToBase58,FromBase58Error};
 
 
 /// ED25519 Public Key (Verifying Key)
@@ -37,6 +41,15 @@ impl ED25519SecretKey {
     }
     pub fn as_bytes(&self) -> &[u8] {
         &self.0
+    }
+    /// [Encoding] UPPER-HEXADECIMAL
+    pub fn to_hex_string(&self) -> String {
+        String::from_utf8(hex::encode_upper(self.0)).unwrap()
+    }
+    /// [Encoding] Decode From UPPER-HEXADECIMAL
+    pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> Result<Vec<u8>,Error> {
+        let bytes = hex::decode_upper(hex_str.as_ref().as_bytes())?;
+        Ok(bytes)
     }
     pub fn from_bytes(bytes: &[u8]) -> Result<ED25519SecretKey, SlugErrors> {
         let mut secret_key_array: [u8;32] = [0u8;32];
@@ -81,6 +94,22 @@ impl ED25519PublicKey {
         let x = self.to_usable_type().unwrap().verify_strict(msg.as_ref(), &signature.to_usable_type())?;
         return Ok(true)
     }
+    /// [Encoding] Encode From UPPER-HEXADECIMAL
+    pub fn to_hex_string(&self) -> String {
+        String::from_utf8(hex::encode_upper(self.0)).unwrap()
+    }
+    /// [Encoding] Decode From UPPER-HEXADECIMAL
+    pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> Result<Vec<u8>,Error> {
+        let bytes = hex::decode_upper(hex_str.as_ref().as_bytes())?;
+        Ok(bytes)
+    }
+    pub fn to_base32_string(&self) -> String {
+        base32::encode(base32::Alphabet::Crockford, &self.0)
+    }
+    pub fn from_base32_string<T: AsRef<str>>(bs32_str: T) -> Vec<u8> {
+        let bytes = base32::decode(base32::Alphabet::Crockford, bs32_str.as_ref()).unwrap();
+        return bytes
+    }
 }
 
 impl ED25519Signature {
@@ -103,6 +132,22 @@ impl ED25519Signature {
     }
     fn to_usable_type(&self) -> Signature {
         Signature::from_bytes(&self.0)
+    }
+    pub fn to_base58_string(&self) -> String {
+        self.0.to_base58()
+    }
+    pub fn from_base58_string<T: AsRef<str>>(base58_str: T) -> Result<Vec<u8>,FromBase58Error> {
+        let bytes = base58_str.as_ref().from_base58()?;
+        Ok(bytes)
+    }
+    /// [Encoding] Encode From UPPER-HEXADECIMAL
+    pub fn to_hex_string(&self) -> String {
+        String::from_utf8(hex::encode_upper(self.0)).unwrap()
+    }
+    /// [Encoding] Decode From UPPER-HEXADECIMAL
+    pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> Result<Vec<u8>,Error> {
+        let bytes = hex::decode_upper(hex_str.as_ref().as_bytes())?;
+        Ok(bytes)
     }
 }
 
