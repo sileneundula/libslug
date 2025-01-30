@@ -7,6 +7,7 @@ categories = ["cryptography"]
 readme = "README.md"
 license = "Apache-2.0 OR MIT"
 description = "A Rust Library For Cryptography Intended For Slug20 That Supports X59 Certificate Format and Post-Quantum Cryptography"
+repository = "https://github.com/sileneundula/libslug"
 
 
 [dependencies]
