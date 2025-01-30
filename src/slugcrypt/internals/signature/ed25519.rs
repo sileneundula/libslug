@@ -77,8 +77,9 @@ impl ED25519PublicKey {
     pub fn to_usable_type(&self) -> Result<VerifyingKey,SignatureError> {
         VerifyingKey::from_bytes(&self.0)
     }
-    pub fn verify<T: AsRef<[u8]>>(&self, signature: ED25519Signature, msg: T) {
-        self.to_usable_type().unwrap().verify_strict(msg.as_ref(), &signature.to_usable_type());
+    pub fn verify<T: AsRef<[u8]>>(&self, signature: ED25519Signature, msg: T) -> Result<bool,SignatureError> {
+        let x = self.to_usable_type().unwrap().verify_strict(msg.as_ref(), &signature.to_usable_type())?;
+        return Ok(true)
     }
 }
 
