@@ -2,6 +2,12 @@
 name = "libslug"
 version = "0.1.0"
 edition = "2021"
+keywords = ["crypto","cryptography","encryption","digest","signature"]
+categories = ["cryptography"]
+readme = "README.md"
+license = "Apache-2.0 OR MIT"
+description = "A Rust Library For Cryptography Intended For Slug20 That Supports X59 Certificate Format and Post-Quantum Cryptography"
+
 
 [dependencies]
 # Curve25519 ECIES Encryption
