@@ -1,3 +1,4 @@
+use bip39::Language;
 use ed25519_dalek::{Signer,Verifier};
 use ed25519_dalek::ed25519::SignatureEncoding;
 use ed25519_dalek::SignatureError;
@@ -8,10 +9,13 @@ use ed25519_dalek::SecretKey;
 use rand::rngs::OsRng;
 use zeroize::{Zeroize,ZeroizeOnDrop};
 use serde::{Serialize,Deserialize};
+use crate::slugcrypt::internals::bip39::SlugMnemonic;
 use crate::slugcrypt::internals::csprng::SlugCSPRNG;
 use crate::errors::SlugErrors;
 use subtle_encoding::hex;
 use subtle_encoding::Error;
+
+use bip39::ErrorKind;
 
 use base32;
 use base58::{FromBase58,ToBase58,FromBase58Error};
@@ -35,6 +39,10 @@ impl ED25519SecretKey {
         let signing_key = SigningKey::from_bytes(&csprng);
 
         return ED25519SecretKey(signing_key.to_bytes())
+    }
+    pub fn from_bip39(mnemonic: SlugMnemonic, language: bip39::Language, password: &str) -> Result<Vec<u8>,ErrorKind> {
+        let seed = mnemonic.to_seed(password, language)?;
+        Ok(seed)
     }
     pub fn to_bytes(&self) -> [u8;32] {
         self.0

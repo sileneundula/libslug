@@ -7,6 +7,7 @@ use pqcrypto_traits::{Error,Result,sign::{PublicKey,SecretKey,DetachedSignature,
 use crate::errors::SlugErrors;
 use crate::slugcrypt::internals::messages::Message;
 use zeroize::{Zeroize,ZeroizeOnDrop};
+use serde::{Serialize,Deserialize};
 
 #[derive(Debug,Zeroize,ZeroizeOnDrop)]
 pub struct SPHINCSPublicKey {
