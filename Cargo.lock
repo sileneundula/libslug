@@ -544,6 +544,7 @@ dependencies = [
  "chacha20poly1305 0.10.1",
  "ecies-ed25519-silene",
  "ed25519-dalek",
+ "hybrid-array",
  "ml-kem",
  "pqcrypto-sphincsplus",
  "pqcrypto-traits",

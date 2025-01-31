@@ -4,10 +4,10 @@ use ml_kem::MlKem1024;
 use ml_kem::KemCore;
 use ml_kem::ParameterSet;
 use ml_kem::ArraySize;
-use ml_kem::array::ArraySize;
 
 use ml_kem::MlKem1024Params;
 use rand::rngs::OsRng;
+use hybrid_array::Array;
 
 pub struct MLKEMPublicKey {
     pub public_key: [u8;1568],
@@ -44,8 +44,8 @@ impl MLKEMSecretKey {
 
 
     }
-    pub fn to_secret_key(&self) -> DecapsulationKey<MlKem1024Params> {
-        DecapsulationKey::from_bytes(&self.secret_key)
+    pub fn to_usable_type(&self) -> DecapsulationKey<MlKem1024Params> {
+        DecapsulationKey::from_bytes(Array::from_slice(&self.secret_key))
     }
 }
 
