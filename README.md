@@ -11,9 +11,11 @@ It extends to include development of modern, decentralized PKI systems and modul
 ## Features
 
 - **Default Encryption:** ECIES Encryption over Curve25519 using AES-GCM
+- **Post-Quantum Encryption:** ML-KEM
+- **Signature Schemes:** ED25519, SPHINCS+ (SHAKE256)
 - **Cert Format:** X59 Certificate Standard
 - **Message-Types:** Supports UTF-8 Messages (so we can include emojis)
-- **Encryption:** AES-GCM 256 + ChaCha20-Poly1305
+- **Encryption:** AES-GCM 256 + XChaCha20-Poly1305
 - **Randomness Generation:** Supports Randomness Generation from the Operating System.
 
 ## X59Registar
