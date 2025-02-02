@@ -54,6 +54,7 @@ pqcrypto-traits = "0.3.5"
 
 # Signatures
 ed25519-dalek = {version = "2.1.1", features=["rand_core"]}
+schnorrkel = "0.11.4"
 
 # Array
 hybrid-array = "0.2.3"
