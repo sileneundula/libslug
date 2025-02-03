@@ -10,6 +10,9 @@ use zeroize::{Zeroize,ZeroizeOnDrop};
 use serde::{Serialize,Deserialize};
 use serde_big_array::BigArray;
 
+use subtle_encoding::hex;
+use base58::{FromBase58, FromBase58Error, ToBase58};
+
 #[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SPHINCSPublicKey {
     #[serde(with = "BigArray")]
@@ -78,6 +81,20 @@ impl SPHINCSPublicKey {
         return Ok(true)
 
     }
+    pub fn to_hex_string(&self) -> std::result::Result<String, std::string::FromUtf8Error> {
+        let bytes = hex::encode_upper(self.pk);
+        Ok(String::from_utf8(bytes)?)
+    }
+    pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> std::result::Result<Vec<u8>,subtle_encoding::Error> {
+        Ok(hex::decode_upper(hex_str.as_ref().as_bytes())?)
+    }
+    pub fn to_base58_string(&self) -> String {
+        self.pk.to_base58()
+    }
+    pub fn from_base58_string<T: AsRef<str>>(bs58_str: T) -> std::result::Result<Vec<u8>, FromBase58Error> {
+        let bytes = bs58_str.as_ref().from_base58()?;
+        Ok(bytes)
+    }
 }
 
 impl SPHINCSSecretKey {
@@ -115,6 +132,13 @@ impl SPHINCSSecretKey {
             return Ok(sk.unwrap())
         }
     }
+    pub fn to_hex_string(&self) -> std::result::Result<String, std::string::FromUtf8Error> {
+        let bytes = hex::encode_upper(self.sk);
+        Ok(String::from_utf8(bytes)?)
+    }
+    pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> std::result::Result<Vec<u8>,subtle_encoding::Error> {
+        Ok(hex::decode_upper(hex_str.as_ref().as_bytes())?)
+    }
 }
 
 impl SPHINCSSignature {
@@ -140,6 +164,20 @@ impl SPHINCSSignature {
         let signature = DetachedSignatureSphincs::from_bytes(&self.to_bytes())?;
 
         return Ok(signature)
+    }
+    pub fn to_hex_string(&self) -> std::result::Result<String, std::string::FromUtf8Error> {
+        let bytes = hex::encode_upper(self.signature);
+        Ok(String::from_utf8(bytes)?)
+    }
+    pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> std::result::Result<Vec<u8>,subtle_encoding::Error> {
+        Ok(hex::decode_upper(hex_str.as_ref().as_bytes())?)
+    }
+    pub fn to_base58_string(&self) -> String {
+        self.signature.to_base58()
+    }
+    pub fn from_base58_string<T: AsRef<str>>(bs58_str: T) -> std::result::Result<Vec<u8>, FromBase58Error> {
+        let bytes = bs58_str.as_ref().from_base58()?;
+        Ok(bytes)
     }
 }
 
