@@ -2,5 +2,5 @@ use libslug::slugcrypt::internals::signature::schnorr::{SchnorrPublicKey,Schnorr
 
 fn main() {
     let sk = SchnorrSecretKey::generate();
-    let signature = sk.sign_with_context("This is a message", "SlugCrypt");
+    let signature = sk.sign_with_context("This is a message", "SlugCrypt").unwrap();
 }
