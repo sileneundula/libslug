@@ -19,6 +19,7 @@ use bip39::ErrorKind;
 
 use base32;
 use base58::{FromBase58,ToBase58,FromBase58Error};
+use serde_big_array::BigArray;
 
 
 /// ED25519 Public Key (Verifying Key)
@@ -30,8 +31,8 @@ pub struct ED25519PublicKey([u8;32]);
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug)]
 pub struct ED25519SecretKey([u8;32]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Debug)]
-pub struct ED25519Signature([u8;64]);
+#[derive(Zeroize,ZeroizeOnDrop,Debug,Serialize,Deserialize)]
+pub struct ED25519Signature(#[serde(with = "BigArray")][u8;64]);
 
 impl ED25519SecretKey {
     pub fn generate() -> ED25519SecretKey {

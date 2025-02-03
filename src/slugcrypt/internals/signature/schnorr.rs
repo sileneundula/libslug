@@ -3,11 +3,20 @@
 
 use schnorrkel::*;
 
+use zeroize::{Zeroize,ZeroizeOnDrop};
 use crate::errors::SlugErrors;
+use serde::{Serialize,Deserialize};
+use serde_big_array::BigArray;
 
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SchnorrPublicKey([u8;32]);
-pub struct SchnorrSecretKey([u8;64]);
-pub struct SchnorrSignature([u8;64]);
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+pub struct SchnorrSecretKey(#[serde(with = "BigArray")][u8;64]);
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+pub struct SchnorrSignature(#[serde(with = "BigArray")][u8;64]);
 
 impl SchnorrSecretKey {
     pub fn generate() -> Self {

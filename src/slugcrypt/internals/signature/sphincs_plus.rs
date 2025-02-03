@@ -8,19 +8,23 @@ use crate::errors::SlugErrors;
 use crate::slugcrypt::internals::messages::Message;
 use zeroize::{Zeroize,ZeroizeOnDrop};
 use serde::{Serialize,Deserialize};
+use serde_big_array::BigArray;
 
-#[derive(Debug,Zeroize,ZeroizeOnDrop)]
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SPHINCSPublicKey {
+    #[serde(with = "BigArray")]
     pk: [u8;64]
 }
 
-#[derive(Debug,Zeroize,ZeroizeOnDrop)]
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SPHINCSSecretKey {
+    #[serde(with = "BigArray")]
     sk: [u8;128]
 }
 
-#[derive(Debug,Zeroize,ZeroizeOnDrop)]
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SPHINCSSignature {
+    #[serde(with = "BigArray")]
     signature: [u8;29_792],
 }
 
