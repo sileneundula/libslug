@@ -8,20 +8,21 @@ use std::string::FromUtf8Error;
 use rand::CryptoRng;
 use rand::RngCore;
 use zeroize::{Zeroize,ZeroizeOnDrop};
+use serde::{Serialize,Deserialize};
 
 use subtle_encoding::hex;
 
-#[derive(Zeroize,ZeroizeOnDrop)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct EncryptionKey {
     key: [u8; 32]
 }
 
-#[derive(Zeroize,ZeroizeOnDrop)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct EncryptionNonce {
     nonce: [u8;24]
 }
 
-#[derive(Zeroize,ZeroizeOnDrop)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct EncryptionCipherText {
     ciphertext: Vec<u8>,
 }

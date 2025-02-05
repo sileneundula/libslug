@@ -1,3 +1,5 @@
+use std::string::FromUtf8Error;
+
 /// # ECIES over Curve25519 (Encryption)
 /// 
 /// This module contains the required data to implement ECIES over Curve25519. This is the standard method of encryption.
@@ -11,6 +13,8 @@ use crate::slugcrypt::internals::ciphertext::CipherText;
 use crate::slugcrypt::internals::messages::Message;
 
 use serde::{Serialize,Deserialize};
+use subtle_encoding::hex;
+use base58::{FromBase58,ToBase58,FromBase58Error};
 
 //use rand::RngCore;
 use rand::rngs::OsRng;
@@ -59,6 +63,19 @@ impl ECPublicKey {
         return Ok(Self {
             public_key
         })
+    }
+    pub fn to_hex_string(&self) -> Result<String,FromUtf8Error> {
+        let bytes = hex::encode_upper(self.public_key.as_bytes());
+        Ok(String::from_utf8(bytes)?)
+    }
+    pub fn from_hex_string<T: AsRef<str>>(bytes: T) -> Result<Vec<u8>,subtle_encoding::Error> {
+        Ok(hex::decode_upper(bytes.as_ref().as_bytes())?)
+    }
+    pub fn to_base58_string(&self) -> String {
+        self.public_key.as_bytes().to_base58()
+    }
+    pub fn from_base58_string<T: AsRef<str>>(bs58_str: T) -> Result<Vec<u8>,FromBase58Error> {
+        Ok(bs58_str.as_ref().from_base58())?
     }
 }
 
@@ -109,5 +126,12 @@ impl ECSecretKey {
     }
     pub fn decrypt(self, ciphertext: CipherText) -> Result<Message,Error> {
         ECIESDecrypt::decrypt(self, ciphertext)
+    }
+    pub fn to_hex_string(&self) -> Result<String,FromUtf8Error> {
+        let bytes = hex::encode_upper(self.secret_key.as_bytes());
+        Ok(String::from_utf8(bytes)?)
+    }
+    pub fn from_hex_string<T: AsRef<str>>(bytes: T) -> Result<Vec<u8>,subtle_encoding::Error> {
+        Ok(hex::decode_upper(bytes.as_ref().as_bytes())?)
     }
 }

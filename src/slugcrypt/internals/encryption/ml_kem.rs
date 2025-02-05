@@ -12,11 +12,19 @@ use hybrid_array::Array;
 
 use crate::errors::SlugErrors;
 
+use serde::{Serialize,Deserialize};
+use zeroize::{Zeroize,ZeroizeOnDrop};
+use serde_big_array::BigArray;
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct MLKEMPublicKey {
+    #[serde(with = "BigArray")]
     pub public_key: [u8;1568],
 }
 
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct MLKEMSecretKey {
+    #[serde(with = "BigArray")]
     pub secret_key: [u8;3168],
 }
 
