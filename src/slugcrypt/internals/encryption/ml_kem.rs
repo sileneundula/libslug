@@ -36,6 +36,10 @@ pub struct MLKEMCipherText {
     pub ciphertext: Vec<u8>,
 }
 
+pub struct MLKEMSharedSecret {
+    pub shared_secret: [u8;32],
+}
+
 impl MLKEMSecretKey {
     pub fn generate() -> (MLKEMPublicKey,MLKEMSecretKey) {
         let mut rng = OsRng;
@@ -95,9 +99,25 @@ impl MLKEMPublicKey {
     pub fn to_usable_type(&self) -> EncapsulationKey<MlKem1024Params> {
         EncapsulationKey::from_bytes(Array::from_slice(&self.public_key))
     }
-    pub fn encapsulate(&self) {
+    pub fn encapsulate(&self) -> (MLKEMCipherText,MLKEMSharedSecret) {
         let mut rng = OsRng;
         let (x,sk) = self.to_usable_type().encapsulate(&mut rng).unwrap();
+        let ciphertext = MLKEMCipherText {
+            ciphertext: x.as_slice().to_vec()
+        };
+
+        let mut shared_secret: [u8;32] = [0u8;32];
+
+        let shared = sk.as_slice();
+
+        if shared.len() == 32 {
+            shared_secret.copy_from_slice(shared);
+        }
+        else {
+            panic!("Shared Secret Less or More Than 32 bytes")
+        }
+
+        return (ciphertext,MLKEMSharedSecret { shared_secret: shared_secret } )
     }
 }
 
