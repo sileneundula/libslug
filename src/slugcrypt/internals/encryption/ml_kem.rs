@@ -5,6 +5,9 @@ use ml_kem::MlKem1024;
 use ml_kem::KemCore;
 use ml_kem::ParameterSet;
 use ml_kem::ArraySize;
+use ml_kem::kem::{Decapsulate,Encapsulate};
+use ml_kem::SharedKey;
+use ml_kem::Ciphertext;
 
 use ml_kem::MlKem1024Params;
 use rand::rngs::OsRng;
@@ -26,6 +29,11 @@ pub struct MLKEMPublicKey {
 pub struct MLKEMSecretKey {
     #[serde(with = "BigArray")]
     pub secret_key: [u8;3168],
+}
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+pub struct MLKEMCipherText {
+    pub ciphertext: Vec<u8>,
 }
 
 impl MLKEMSecretKey {
@@ -62,6 +70,9 @@ impl MLKEMSecretKey {
         let bytes = self.to_usable_type().encapsulation_key().as_bytes();
         MLKEMPublicKey::from_bytes(&bytes)
     }
+    pub fn decapsulate(&self) {
+        //self.to_usable_type().decapsulate(encapsulated_key)
+    }
 }
 
 impl MLKEMPublicKey {
@@ -83,6 +94,10 @@ impl MLKEMPublicKey {
     }
     pub fn to_usable_type(&self) -> EncapsulationKey<MlKem1024Params> {
         EncapsulationKey::from_bytes(Array::from_slice(&self.public_key))
+    }
+    pub fn encapsulate(&self) {
+        let mut rng = OsRng;
+        let (x,sk) = self.to_usable_type().encapsulate(&mut rng).unwrap();
     }
 }
 
