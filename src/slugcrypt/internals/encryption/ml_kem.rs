@@ -12,6 +12,7 @@ use ml_kem::Ciphertext;
 use ml_kem::MlKem1024Params;
 use rand::rngs::OsRng;
 use hybrid_array::Array;
+use serde_encrypt::key;
 
 use crate::errors::SlugErrors;
 
@@ -36,6 +37,7 @@ pub struct MLKEMCipherText {
     pub ciphertext: Vec<u8>,
 }
 
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize,PartialEq, Debug)]
 pub struct MLKEMSharedSecret {
     pub shared_secret: [u8;32],
 }
@@ -74,8 +76,22 @@ impl MLKEMSecretKey {
         let bytes = self.to_usable_type().encapsulation_key().as_bytes();
         MLKEMPublicKey::from_bytes(&bytes)
     }
-    pub fn decapsulate(&self) {
-        //self.to_usable_type().decapsulate(encapsulated_key)
+    pub fn decapsulate(&self, ciphertext: MLKEMCipherText) -> MLKEMSharedSecret {
+        let key: EncapsulationKey<MlKem1024Params> = EncapsulationKey::from_bytes(Array::from_slice(ciphertext.as_bytes()));
+
+        let shared_secret_output = self.to_usable_type().decapsulate(&key.as_bytes()).unwrap();
+
+
+        
+        let mut shared_secret: [u8;32] = [0u8;32];
+
+        let bytes = shared_secret_output.as_slice();
+
+        shared_secret.copy_from_slice(&bytes);
+
+        return MLKEMSharedSecret {
+            shared_secret: shared_secret
+        }
     }
 }
 
@@ -118,6 +134,12 @@ impl MLKEMPublicKey {
         }
 
         return (ciphertext,MLKEMSharedSecret { shared_secret: shared_secret } )
+    }
+}
+
+impl MLKEMCipherText {
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.ciphertext
     }
 }
 
