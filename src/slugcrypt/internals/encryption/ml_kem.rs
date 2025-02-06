@@ -141,8 +141,8 @@ impl MLKEMCipherText {
     pub fn as_bytes(&self) -> &[u8] {
         &self.ciphertext
     }
-    pub fn to_usable_type(&self) -> Ciphertext<K>  {
-        let ciphertext: = Ciphertext::<ArraySize>::try_from(Array::from_slice(&self.ciphertext).to_owned()).unwrap();
+    pub fn to_usable_type(&self) -> Ciphertext<KemCore::CiphertextSize>  {
+        let ciphertext = Ciphertext::try_from(Array::from_slice(&self.ciphertext).to_owned()).unwrap();
         return ciphertext
     }
 }
