@@ -79,7 +79,7 @@ impl MLKEMSecretKey {
     pub fn decapsulate(&self, ciphertext: MLKEMCipherText) -> MLKEMSharedSecret {
         let key: EncapsulationKey<MlKem1024Params> = EncapsulationKey::from_bytes(Array::from_slice(ciphertext.as_bytes()));
 
-        let shared_secret_output = self.to_usable_type().decapsulate(&key.as_bytes()).unwrap();
+        let shared_secret_output = self.to_usable_type().decapsulate(Array::from_slice(ciphertext.as_bytes())).unwrap();
 
 
         
