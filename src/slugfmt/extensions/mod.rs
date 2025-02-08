@@ -4,4 +4,5 @@ pub struct Extensions {
 
 pub enum ExtensionTypes {
     None,
+    Strict,
 }
