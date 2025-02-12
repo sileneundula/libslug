@@ -12,9 +12,10 @@ use serde_big_array::BigArray;
 
 use base58::{FromBase58, FromBase58Error, ToBase58};
 use subtle_encoding::hex;
+use schnorrkel::{Keypair, vrf::{VRFInOut, VRFProof, VRFSigningTranscript, Malleable}};
+
 
 pub const SLUGCRYPT_CONTEXT: &str = "SlugCrypt";
-
 
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SchnorrPublicKey([u8;32]);
@@ -24,6 +25,12 @@ pub struct SchnorrSecretKey(#[serde(with = "BigArray")][u8;64]);
 
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SchnorrSignature(#[serde(with = "BigArray")][u8;64]);
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+pub struct SchnorrVRFProof(#[serde(with = "BigArray")][u8;64]);
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+pub struct SchnorrIO([u8;32]);
 
 impl SchnorrSecretKey {
     pub fn generate() -> Self {
@@ -59,6 +66,13 @@ impl SchnorrSecretKey {
     }
     pub fn sign_with_slugcrypt<T: AsRef<[u8]>>(&self, msg: T) -> Result<SchnorrSignature, SignatureError> {
         self.sign_with_context(msg.as_ref(), SLUGCRYPT_CONTEXT.as_bytes())
+    }
+    pub fn vrf<T: AsRef<[u8]>>(&self, msg: T) -> (VRFInOut,VRFProof) {
+        let keypair = Keypair::from(self.to_usable_type().unwrap());
+        
+        let transcript = Malleable::from(msg.as_ref());
+        let mut (vrf_io, vrf_proof, _) = keypair.vrf_sign(transcript);
+        return (vrf_io,vrf_proof)
     }
     pub fn to_public_key_type(&self) -> Result<schnorrkel::PublicKey,schnorrkel::SignatureError> {
         let sk = self.to_usable_type()?;

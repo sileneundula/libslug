@@ -18,7 +18,7 @@ impl KeyPairFormat {
 
             public_key: pk.as_ref().to_string(),
             secret_key: sk.as_ref().to_string(),
-            fingerprint: String::from("StaticFingerprint")
+            fingerprint: String::from("StaticFingerprint"),
         }
     }
 }
