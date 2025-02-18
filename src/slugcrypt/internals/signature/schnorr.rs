@@ -12,7 +12,8 @@ use serde_big_array::BigArray;
 
 use base58::{FromBase58, FromBase58Error, ToBase58};
 use subtle_encoding::hex;
-use schnorrkel::{Keypair, vrf::{VRFInOut, VRFProof, VRFSigningTranscript, Malleable}};
+use schnorrkel::{Keypair, vrf::{VRFInOut, VRFProof, VRFPreOut, VRFSigningTranscript, Malleable}};
+use schnorrkel::context::SigningContext;
 
 
 pub const SLUGCRYPT_CONTEXT: &str = "SlugCrypt";
@@ -27,10 +28,55 @@ pub struct SchnorrSecretKey(#[serde(with = "BigArray")][u8;64]);
 pub struct SchnorrSignature(#[serde(with = "BigArray")][u8;64]);
 
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
-pub struct SchnorrVRFProof(#[serde(with = "BigArray")][u8;64]);
+pub struct SchnorrVRFProof(#[serde(with = "BigArray")]pub [u8;64]);
 
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
-pub struct SchnorrIO([u8;32]);
+pub struct SchnorrIO(pub [u8;32]);
+
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+pub struct SchnorrPreout(pub [u8;32]);
+
+impl SchnorrIO {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self,SlugErrors> {
+        let mut io_array: [u8;32] = [0u8;32];
+
+        if bytes.len() == 32 {
+            io_array.copy_from_slice(bytes);
+            Ok(Self(io_array))
+        }
+        else {
+            Err(SlugErrors::InvalidLengthFromBytes)
+        }
+    }
+}
+
+impl SchnorrVRFProof {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self,SlugErrors> {
+        let mut proof_array: [u8;64] = [0u8;64];
+
+        if bytes.len() == 64 {
+            proof_array.copy_from_slice(bytes);
+            Ok(Self(proof_array))
+        }
+        else {
+            Err(SlugErrors::InvalidLengthFromBytes)
+        }
+    }
+}
+
+impl SchnorrPreout {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self,SlugErrors> {
+        let mut preout_array: [u8;32] = [0u8;32];
+
+        if bytes.len() == 32 {
+            preout_array.copy_from_slice(bytes);
+            Ok(Self(preout_array))
+        }
+        else {
+            Err(SlugErrors::InvalidLengthFromBytes)
+        }
+    }
+}
 
 impl SchnorrSecretKey {
     pub fn generate() -> Self {
@@ -67,12 +113,18 @@ impl SchnorrSecretKey {
     pub fn sign_with_slugcrypt<T: AsRef<[u8]>>(&self, msg: T) -> Result<SchnorrSignature, SignatureError> {
         self.sign_with_context(msg.as_ref(), SLUGCRYPT_CONTEXT.as_bytes())
     }
-    pub fn vrf<T: AsRef<[u8]>>(&self, msg: T) -> (VRFInOut,VRFProof) {
+    pub fn vrf_checked<T: AsRef<[u8]>>(&self, msg: T, signing_context: T) -> (SchnorrIO,SchnorrVRFProof,SchnorrPreout) {
         let keypair = Keypair::from(self.to_usable_type().unwrap());
+        let ctx = SigningContext::new(signing_context.as_ref());
+        let (vrf_io, vrf_proof, _) = keypair.vrf_sign(ctx.bytes(msg.as_ref()));
         
-        let transcript = Malleable::from(msg.as_ref());
-        let mut (vrf_io, vrf_proof, _) = keypair.vrf_sign(transcript);
-        return (vrf_io,vrf_proof)
+        let preout = vrf_io.to_preout();
+
+        let vrfproof = SchnorrVRFProof::from_bytes(&vrf_proof.to_bytes()).unwrap();
+        let vrfio = SchnorrIO::from_bytes(vrf_io.as_output_bytes()).unwrap();
+        let vrfpreout = SchnorrPreout::from_bytes(preout.as_bytes()).unwrap();
+
+        return (vrfio,vrfproof,vrfpreout)
     }
     pub fn to_public_key_type(&self) -> Result<schnorrkel::PublicKey,schnorrkel::SignatureError> {
         let sk = self.to_usable_type()?;
@@ -100,6 +152,15 @@ impl SchnorrPublicKey {
     }
     pub fn to_usable_type(&self) -> Result<schnorrkel::PublicKey,SignatureError> {
         schnorrkel::PublicKey::from_bytes(&self.0)
+    }
+    pub fn verify_vrf<T: AsRef<[u8]>>(&self, vrf_preout: SchnorrPreout, vrf_io: SchnorrIO, vrf_proof: SchnorrVRFProof, transcript: T, msg: T) -> Result<(VRFInOut, vrf::VRFProofBatchable), SignatureError>  {
+        let pk = self.to_usable_type()?;
+
+        let preout = VRFPreOut::from_bytes(&vrf_preout.0)?;
+        let vrf_proof = VRFProof::from_bytes(&vrf_proof.0)?;
+        let transcript = SigningContext::new(transcript.as_ref());
+        
+        pk.vrf_verify(transcript.bytes(msg.as_ref()), &preout, &vrf_proof)
     }
     pub fn from_bytes(bytes: &[u8]) -> Result<Self,SlugErrors> {
         let mut pk_array: [u8;32] = [0u8;32];
