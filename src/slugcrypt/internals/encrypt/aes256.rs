@@ -7,6 +7,7 @@ use aes_gcm::{
     Aes256Gcm, Nonce, Key // Or `Aes128Gcm`
 };
 
+/*
 use hybrid_array::Array;
 
 impl EncryptionKey {
@@ -33,3 +34,4 @@ impl EncryptAES256 {
         let nonce = Aes256Gcm::generate_nonce(&mut OsRng);
     }
 }
+    */

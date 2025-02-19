@@ -30,10 +30,10 @@ pub struct SchnorrSignature(#[serde(with = "BigArray")][u8;64]);
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct SchnorrVRFProof(#[serde(with = "BigArray")]pub [u8;64]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug)]
 pub struct SchnorrIO(pub [u8;32]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug)]
 pub struct SchnorrPreout(pub [u8;32]);
 
 impl SchnorrIO {
@@ -113,7 +113,7 @@ impl SchnorrSecretKey {
     pub fn sign_with_slugcrypt<T: AsRef<[u8]>>(&self, msg: T) -> Result<SchnorrSignature, SignatureError> {
         self.sign_with_context(msg.as_ref(), SLUGCRYPT_CONTEXT.as_bytes())
     }
-    pub fn vrf_checked<T: AsRef<[u8]>>(&self, msg: T, signing_context: T) -> (SchnorrIO,SchnorrVRFProof,SchnorrPreout) {
+    pub fn vrf<T: AsRef<[u8]>>(&self, msg: T, signing_context: T) -> (SchnorrIO,SchnorrVRFProof,SchnorrPreout) {
         let keypair = Keypair::from(self.to_usable_type().unwrap());
         let ctx = SigningContext::new(signing_context.as_ref());
         let (vrf_io, vrf_proof, _) = keypair.vrf_sign(ctx.bytes(msg.as_ref()));

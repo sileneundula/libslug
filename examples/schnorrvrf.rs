@@ -6,7 +6,7 @@ fn main() {
     let message = "This is a message";
     let context = "SigningContext";
 
-    let output: (SchnorrIO, SchnorrVRFProof, SchnorrPreout) = sk.vrf_checked(message, context);
+    let output: (SchnorrIO, SchnorrVRFProof, SchnorrPreout) = sk.vrf(message, context);
 
     println!("Randomness: {:?}", output.0);
     let last_verify = pk.verify_vrf(output.2, output.0, output.1, context, message);
