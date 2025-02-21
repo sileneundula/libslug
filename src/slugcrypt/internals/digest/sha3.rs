@@ -1,0 +1,1 @@
+pub struct Sha3Digest(String);

@@ -18,3 +18,5 @@ pub mod ciphertext;
 
 /// Digital Signatures: ED25519, SPHINCS+ (SHAKE256) at 255 bit security
 pub mod signature;
+
+pub mod digest;
