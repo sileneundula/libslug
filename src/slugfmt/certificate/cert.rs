@@ -6,7 +6,7 @@ use zeroize::Zeroize;
 
 
 use super::required_info::RequiredInfo;
-use super::section::signing::signing::Signing;
+use crate::slugfmt::certificate::section::signing::signing::Signing;
 
 pub struct CertType(pub String);
 

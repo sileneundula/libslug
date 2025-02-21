@@ -1,4 +1,3 @@
-use schnorrkel::derive;
 use subtle_encoding::hex;
 use zeroize::{Zeroize,ZeroizeOnDrop};
 use serde::{Serialize,Deserialize};
