@@ -25,7 +25,3 @@ impl SlugCrypt {
     }
 }
 
-impl SlugAsyCrypt {
-
-}
-

@@ -11,6 +11,7 @@ use zeroize::{Zeroize,ZeroizeOnDrop};
 use serde::{Serialize,Deserialize};
 
 use subtle_encoding::hex;
+use crate::slugcrypt::internals::csprng::SlugCSPRNG;
 
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
 pub struct EncryptionKey {
@@ -72,6 +73,13 @@ impl EncryptionKey {
 
         return Self {
             key: key,
+        }
+    }
+    pub fn securerandgenerate(pass: &str) -> Self {
+        let x = SlugCSPRNG::new(pass);
+
+        return Self {
+            key: x,
         }
     }
     pub fn to_hex(&self) -> Result<String,FromUtf8Error> {

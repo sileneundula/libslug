@@ -32,6 +32,19 @@ impl EncryptionKey {
         key.copy_from_slice(&bytes);
         Self(key)
     }
+    pub fn from_bytes(bytes: &[u8]) -> Self {
+        let mut key = [0u8; 32];
+        key.copy_from_slice(bytes);
+        Self(key)
+    }
+    pub fn securerandgenerate(pass: &str) -> [u8;32] {
+        let rng = securerand_rs::securerand::SecureRandom::new(pass);
+        return rng
+    }
+    pub fn generate() -> Self {
+        let key: [u8;32] = crate::slugcrypt::internals::csprng::SlugCSPRNG::os_rand();
+        return Self(key)
+    }
 }
 
 impl EncryptionNonce {
@@ -75,14 +88,6 @@ impl AESCipherText {
         return Ok(Self {
             ciphertext: bs58
         })
-    }
-}
-
-impl EncryptionKey {
-    pub fn generate() -> Self {
-        let key = Aes256Gcm::generate_key(OsRng);
-        let key: [u8;32] = key.as_slice().try_into().unwrap();
-        return Self(key)
     }
 }
 
