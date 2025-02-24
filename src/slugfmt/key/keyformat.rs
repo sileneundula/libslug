@@ -18,6 +18,8 @@ impl KeyPairFormat {
         Self {
             version: 0u8,
             alg: alg,
+            is_signer: true,
+            is_encryption: false,
 
             public_key: pk.as_ref().to_string(),
             secret_key: sk.as_ref().to_string(),
