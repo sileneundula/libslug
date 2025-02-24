@@ -4,10 +4,13 @@ use serde_encrypt::shared_key::SharedKey;
 pub struct KeyPairFormat {
     version: u8,
     alg: u16,
+    
+    is_signer: bool,
+    is_encryption: bool,
 
     public_key: String,
     secret_key: String,
-    fingerprint: String,
+    fingerprint: String, // 8-byte fingerprint
 }
 
 impl KeyPairFormat {
