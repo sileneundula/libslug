@@ -13,7 +13,6 @@ use aes_gcm::{
 
 
 use hybrid_array::Array;
-use schnorrkel::derive;
 use subtle_encoding::hex;
 use base58::{FromBase58,ToBase58,FromBase58Error};
 use zeroize::{Zeroize,ZeroizeOnDrop};
