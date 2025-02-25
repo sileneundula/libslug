@@ -3,3 +3,6 @@ pub mod chacha20;
 
 /// AES256-GCM
 pub mod aes256;
+
+/// Morus AEAD
+pub mod morus;
