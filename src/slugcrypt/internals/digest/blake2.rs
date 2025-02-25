@@ -39,4 +39,8 @@ impl SlugBlake2sHasher {
         let result = hasher.finalize_variable(&mut out);
         return out
     }
+    pub fn thumbprint<T: AsRef<[u8]>>(&self, data: T) {
+        let thumbprint = Self::new(8usize);
+        thumbprint.hash(data.as_ref());
+    }
 }
