@@ -7,3 +7,5 @@ pub mod blake2;
 
 /// SHA2
 pub mod sha2;
+
+pub mod blake3;
