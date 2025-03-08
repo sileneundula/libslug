@@ -7,11 +7,14 @@ pub struct SlugDigest;
 use crate::slugcrypt::internals::encrypt::chacha20::*;
 use crate::slugcrypt::internals::encrypt::aes256::{EncryptAES256, DecryptAES256};
 use crate::slugcrypt::internals::encrypt::aes256;
+use crate::slugcrypt::internals::encryption::ecies::*;
 
 use crate::slugcrypt::internals::digest::blake2;
 use crate::slugcrypt::internals::digest::sha2;
 use crate::slugcrypt::internals::digest::sha3;
 use crate::slugcrypt::internals::digest::digest;
+
+use super::internals::ciphertext::CipherText;
 
 impl SlugCrypt {
     pub fn encrypt<T: AsRef<[u8]>>(key: EncryptionKey, data: T) -> Result<(EncryptionCipherText,EncryptionNonce),chacha20poly1305::aead::Error> {
@@ -55,3 +58,13 @@ impl SlugDigest {
     }
 }
 
+impl SlugAsyCrypt {
+    pub fn encrypt<T: AsRef<[u8]>>(pk: ECPublicKey, data: T) -> Result<super::internals::ciphertext::CipherText, ecies_ed25519::Error> {
+        let ct: Result<super::internals::ciphertext::CipherText, ecies_ed25519::Error> = ECIESEncrypt::encrypt(pk, data.as_ref());
+        return ct
+    }
+    pub fn decrypt(sk: ECSecretKey, ct: CipherText) -> Result<super::internals::messages::Message, ecies_ed25519::Error> {
+        let x: Result<super::internals::messages::Message, ecies_ed25519::Error> = ECIESDecrypt::decrypt(sk, ct);
+        return x
+    }
+}

@@ -2,6 +2,7 @@ use libslug::slugcrypt::api::{SlugCrypt,SlugDigest};
 
 use libslug::slugcrypt::internals::encrypt::chacha20::{EncryptionKey,EncryptionNonce,EncryptionCipherText};
 use libslug::slugcrypt::internals::encrypt::aes256;
+use libslug::slugcrypt::api::SlugAsyCrypt;
 
 
 fn main() {

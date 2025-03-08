@@ -1,6 +1,6 @@
 [package]
 name = "libslug"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 keywords = ["crypto","cryptography","encryption","digest","signature"]
 categories = ["cryptography"]
@@ -14,7 +14,6 @@ repository = "https://github.com/sileneundula/libslug"
 # Curve25519 ECIES Encryption
 # ecies-ed25519 = {version = "0.5.1", features=["serde"]}
 ecies-ed25519 = {package="ecies-ed25519-silene", version="0.1.0", features=["serde"]}
-x-wing = "0.0.1-pre.1"
 
 # Randomness
 rand = "0.8.5"
