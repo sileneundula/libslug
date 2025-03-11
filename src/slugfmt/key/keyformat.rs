@@ -1,5 +1,7 @@
 use serde::{Serialize,Deserialize};
 use serde_encrypt::shared_key::SharedKey;
+use crate::slugcrypt::internals::digest::blake2::SlugBlake2sHasher;
+use crate::slugcrypt::internals::digest::digest::SlugDigest;
 
 pub struct KeyPairFormat {
     version: u8,
@@ -27,13 +29,26 @@ pub enum KeypairType {
 
 impl KeyPairFormat {
     pub fn from_keypair<T: AsRef<str>>(pk: T, sk: T, alg: KeypairAlgorithm) -> Self {
+        let keypairtype = match alg {
+            KeypairAlgorithm::SIG_ED25519 => KeypairType::Signer,
+            KeypairAlgorithm::SIG_SPHINCS_PLUS => KeypairType::Signer,
+            KeypairAlgorithm::SIG_SlugSchnorr => KeypairType::Signer,
+
+            KeypairAlgorithm::ENC_SlugECIES => KeypairType::Encryption,
+            KeypairAlgorithm::ENC_MLKEM => KeypairType::Encryption,
+        };
+
+        let hasher = SlugBlake2sHasher::new(8).hash(pk.as_ref().to_string());
+        let digest = SlugDigest::from_bytes(&hasher).unwrap();
+        
         Self {
             version: 0u8,
             alg: alg,
+            keytype: keypairtype,
 
             public_key: pk.as_ref().to_string(),
             secret_key: sk.as_ref().to_string(),
-            fingerprint: String::from("StaticFingerprint"),
+            fingerprint: digest.to_string().as_str().to_string(),
         }
     }
 }
