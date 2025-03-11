@@ -4,6 +4,10 @@ pub struct SlugAsyCrypt;
 /// Digests API (BLAKE2, SHA2, SHA3)
 pub struct SlugDigest;
 
+pub struct SlugCSPRNGAPI;
+
+use bip39::{ErrorKind, Language};
+
 use crate::slugcrypt::internals::encrypt::chacha20::*;
 use crate::slugcrypt::internals::encrypt::aes256::{EncryptAES256, DecryptAES256};
 use crate::slugcrypt::internals::encrypt::aes256;
@@ -13,6 +17,10 @@ use crate::slugcrypt::internals::digest::blake2;
 use crate::slugcrypt::internals::digest::sha2;
 use crate::slugcrypt::internals::digest::sha3;
 use crate::slugcrypt::internals::digest::digest;
+
+use crate::slugcrypt::internals::csprng::SlugCSPRNG;
+
+use crate::slugcrypt::internals::bip39::SlugMnemonic;
 
 use super::internals::ciphertext::CipherText;
 
@@ -66,5 +74,22 @@ impl SlugAsyCrypt {
     pub fn decrypt(sk: ECSecretKey, ct: CipherText) -> Result<super::internals::messages::Message, ecies_ed25519::Error> {
         let x: Result<super::internals::messages::Message, ecies_ed25519::Error> = ECIESDecrypt::decrypt(sk, ct);
         return x
+    }
+}
+
+impl SlugCSPRNGAPI {
+    pub fn new(pass: &str) -> [u8;32] {
+        SlugCSPRNG::new(pass)
+    }
+    pub fn from_os() -> [u8;32] {
+        SlugCSPRNG::os_rand()
+    }
+    pub fn mnemonic(mnemonic: SlugMnemonic, pass: &str, language: Language) -> Result<[u8;32],ErrorKind> {
+        let seed = mnemonic.to_seed(pass, language)?;
+        let mut output: [u8;32] = [0u8;32];
+
+        output.copy_from_slice(&seed);
+
+        Ok(output)
     }
 }
