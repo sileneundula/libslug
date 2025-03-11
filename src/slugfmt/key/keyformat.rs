@@ -2,6 +2,8 @@ use serde::{Serialize,Deserialize};
 use serde_encrypt::shared_key::SharedKey;
 use crate::slugcrypt::internals::digest::blake2::SlugBlake2sHasher;
 use crate::slugcrypt::internals::digest::digest::SlugDigest;
+use serde_encrypt::traits::SerdeEncryptSharedKey;
+use serde_encrypt::shared_key::SharedKey;
 
 pub struct KeyPairFormat {
     version: u8,
@@ -11,6 +13,10 @@ pub struct KeyPairFormat {
     public_key: String,
     secret_key: String,
     fingerprint: String, // 8-byte fingerprint
+}
+
+impl SerdeEncryptedSharedKey for KeyPairFormat {
+    
 }
 
 pub enum KeypairAlgorithm {
