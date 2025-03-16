@@ -25,7 +25,7 @@ use serde_big_array::BigArray;
 /// ED25519 Public Key (Verifying Key)
 /// 
 /// 32-byte Key in ED25519
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone, Debug)]
 pub struct ED25519PublicKey([u8;32]);
 
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug)]

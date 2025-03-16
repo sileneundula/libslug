@@ -13,7 +13,7 @@ use serde_big_array::BigArray;
 use subtle_encoding::hex;
 use base58::{FromBase58, FromBase58Error, ToBase58};
 
-#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone)]
 pub struct SPHINCSPublicKey {
     #[serde(with = "BigArray")]
     pk: [u8;64]

@@ -3,8 +3,11 @@ use serde_encrypt::shared_key::SharedKey;
 use crate::slugcrypt::internals::digest::blake2::SlugBlake2sHasher;
 use crate::slugcrypt::internals::digest::digest::SlugDigest;
 use serde_encrypt::traits::SerdeEncryptSharedKey;
-use serde_encrypt::shared_key::SharedKey;
 
+use crate::slugcrypt::internals::encrypt::chacha20::{EncryptionCipherText,EncryptionKey,EncryptionNonce,SlugEncrypt};
+
+/*
+#[derive(Serialize,Deserialize,Debug,Clone)]
 pub struct KeyPairFormat {
     version: u8,
     alg: KeypairAlgorithm,
@@ -13,10 +16,6 @@ pub struct KeyPairFormat {
     public_key: String,
     secret_key: String,
     fingerprint: String, // 8-byte fingerprint
-}
-
-impl SerdeEncryptedSharedKey for KeyPairFormat {
-    
 }
 
 pub enum KeypairAlgorithm {
@@ -58,3 +57,9 @@ impl KeyPairFormat {
         }
     }
 }
+
+#[test]
+fn create() {
+    let keypair = KeyPairFormat::from_keypair("SSS", "SSS", KeypairAlgorithm::SIG_ED25519);
+}
+*/
