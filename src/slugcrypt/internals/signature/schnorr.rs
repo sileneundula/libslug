@@ -21,7 +21,7 @@ pub const SLUGCRYPT_CONTEXT: &str = "SlugCrypt";
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone)]
 pub struct SchnorrPublicKey([u8;32]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone)]
 pub struct SchnorrSecretKey(#[serde(with = "BigArray")][u8;64]);
 
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]

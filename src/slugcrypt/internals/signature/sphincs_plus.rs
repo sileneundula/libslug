@@ -19,7 +19,7 @@ pub struct SPHINCSPublicKey {
     pk: [u8;64]
 }
 
-#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone)]
 pub struct SPHINCSSecretKey {
     #[serde(with = "BigArray")]
     sk: [u8;128]
