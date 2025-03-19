@@ -6,18 +6,18 @@ use serde_encrypt::traits::SerdeEncryptSharedKey;
 
 use crate::slugcrypt::internals::encrypt::chacha20::{EncryptionCipherText,EncryptionKey,EncryptionNonce,SlugEncrypt};
 
-/*
 #[derive(Serialize,Deserialize,Debug,Clone)]
 pub struct KeyPairFormat {
     version: u8,
     alg: KeypairAlgorithm,
     keytype: KeypairType,
 
-    public_key: String,
-    secret_key: String,
+    public_key: String, // Hex
+    secret_key: String, // Hex (encrypted)
     fingerprint: String, // 8-byte fingerprint
 }
 
+#[derive(Serialize,Deserialize,Debug,Clone)]
 pub enum KeypairAlgorithm {
     SIG_ED25519,
     SIG_SlugSchnorr,
@@ -27,6 +27,7 @@ pub enum KeypairAlgorithm {
     ENC_MLKEM,
 }
 
+#[derive(Serialize,Deserialize,Debug,Clone)]
 pub enum KeypairType {
     Signer,
     Encryption,
@@ -62,4 +63,3 @@ impl KeyPairFormat {
 fn create() {
     let keypair = KeyPairFormat::from_keypair("SSS", "SSS", KeypairAlgorithm::SIG_ED25519);
 }
-*/
