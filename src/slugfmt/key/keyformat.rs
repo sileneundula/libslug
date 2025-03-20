@@ -9,6 +9,7 @@ use crate::slugcrypt::internals::encrypt::chacha20::{EncryptionCipherText,Encryp
 #[derive(Serialize,Deserialize,Debug,Clone)]
 pub struct KeyPairFormat {
     version: u8,
+    platform: String, // SlugCrypt
     alg: KeypairAlgorithm,
     keytype: KeypairType,
 
@@ -49,6 +50,7 @@ impl KeyPairFormat {
         
         Self {
             version: 0u8,
+            platform: "SlugCrypt".to_string(),
             alg: alg,
             keytype: keypairtype,
 
