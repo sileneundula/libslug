@@ -16,6 +16,7 @@ use hybrid_array::Array;
 use subtle_encoding::hex;
 use base58::{FromBase58,ToBase58,FromBase58Error};
 use zeroize::{Zeroize,ZeroizeOnDrop};
+use crate::slugfmt::key::encryptkey::SlugCipherText;
 
 impl EncryptionKey {
     pub fn as_bytes(&self) -> &[u8] {
@@ -87,6 +88,14 @@ impl AESCipherText {
         return Ok(Self {
             ciphertext: bs58
         })
+    }
+    pub fn to_slugciphertext(self, name: String) -> SlugCipherText {
+        SlugCipherText::aes256(name, self)
+    }
+    pub fn from_slugciphertext(s: SlugCipherText) -> Self {
+        Self {
+            ciphertext: s.ciphertext.from_base58().unwrap()
+        }
     }
 }
 

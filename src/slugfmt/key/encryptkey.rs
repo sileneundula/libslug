@@ -95,7 +95,7 @@ impl SlugCipherText {
         };
         return ct
     }
-    pub fn xchacha20(name: String, ciphertext: chacha20::EncryptionCipherText, tag: Vec<u8>) -> Self {
+    pub fn xchacha20(name: String, ciphertext: chacha20::EncryptionCipherText) -> Self {
         let ct = SlugCipherText {
             version: 0u8,
             platform: "SLUGCRYPT".to_string(),
@@ -109,13 +109,28 @@ impl SlugCipherText {
 }
 
 impl SlugDecryptedOutput {
-    pub fn new(version: u8, platform: String, output: Vec<u8>, fingerprint: String) -> Self {
+    pub fn new(output: Vec<u8>) -> Self {
         SlugDecryptedOutput {
-            version,
-            platform,
-            output,
-            fingerprint
+            version: 0u8,
+            platform: String::from("SLUGCRYPT"),
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(6).hash(&output)).unwrap().to_string().as_str().to_string(),
+            output: output,
         }
+    }
+    pub fn fingerprint(&self) -> String {
+        self.fingerprint.clone()
+    }
+    pub fn version(&self) -> u8 {
+        self.version
+    }
+    pub fn platform(&self) -> String {
+        self.platform.clone()
+    }
+    pub fn output(&self) -> Vec<u8> {
+        self.output.clone()
+    }
+    pub fn to_utf8(&self) -> Result<String, std::string::FromUtf8Error> {
+        String::from_utf8(self.output.clone())
     }
 }
 
