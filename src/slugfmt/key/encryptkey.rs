@@ -4,6 +4,10 @@ use serde::{Serialize,Deserialize};
 use crate::slugcrypt::internals::digest::blake2::SlugBlake2sHasher;
 use crate::slugcrypt::internals::digest::digest::SlugDigest;
 
+
+/// .sctx - Slug Cipher Text
+/// .skey - Slug Key Text
+
 #[derive(Serialize,Deserialize, PartialEq, Debug,Clone)]
 pub struct SlugEncryptKey {
     pub version: u8,
@@ -12,6 +16,16 @@ pub struct SlugEncryptKey {
     
     pub key: String,
     pub nonce: String,
+    pub fingerprint: String,
+}
+
+#[derive(Serialize,Deserialize, PartialEq, Debug,Clone)]
+pub struct SlugCipherText {
+    pub version: u8,
+    pub platform: String,
+    pub alg: SlugEncryptAlgorithm,
+    pub common_name: String,
+    pub ciphertext: String,
     pub fingerprint: String,
 }
 
@@ -58,6 +72,32 @@ impl SlugEncryptKey {
 
         let message = chacha20::SlugEncrypt::decrypt(key, nonce, ciphertext).unwrap();
         return message;
+    }
+}
+
+impl SlugCipherText {
+    pub fn aes256(name: String, ciphertext: aes256::AESCipherText) -> Self {
+        let ct = SlugCipherText {
+            version: 0u8,
+            platform: "SLUGCRYPT".to_string(),
+            alg: SlugEncryptAlgorithm::AES256GCM,
+            common_name: name,
+            ciphertext: ciphertext.bs58(),
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).hash(ciphertext.bs58().as_bytes())).unwrap().to_string().as_str().to_string()
+
+        };
+        return ct
+    }
+    pub fn xchacha20(name: String, ciphertext: chacha20::EncryptionCipherText, tag: Vec<u8>) -> Self {
+        let ct = SlugCipherText {
+            version: 0u8,
+            platform: "SLUGCRYPT".to_string(),
+            alg: SlugEncryptAlgorithm::XChaCha20Poly1305,
+            common_name: name,
+            ciphertext: ciphertext.bs58(),
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).hash(ciphertext.bs58().as_bytes())).unwrap().to_string().as_str().to_string()
+        };
+        return ct
     }
 }
 
