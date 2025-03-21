@@ -29,6 +29,13 @@ pub struct SlugCipherText {
     pub fingerprint: String,
 }
 
+pub struct SlugDecryptedOutput {
+    pub version: u8,
+    pub platform: String,
+    pub output: Vec<u8>,
+    pub fingerprint: String,
+}
+
 impl SlugEncryptKey {
     pub fn aes256(key: aes256::EncryptionKey, nonce: aes256::EncryptionNonce) -> Self {
         let key = SlugEncryptKey {
@@ -98,6 +105,17 @@ impl SlugCipherText {
             fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).hash(ciphertext.bs58().as_bytes())).unwrap().to_string().as_str().to_string()
         };
         return ct
+    }
+}
+
+impl SlugDecryptedOutput {
+    pub fn new(version: u8, platform: String, output: Vec<u8>, fingerprint: String) -> Self {
+        SlugDecryptedOutput {
+            version,
+            platform,
+            output,
+            fingerprint
+        }
     }
 }
 
