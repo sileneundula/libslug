@@ -11,10 +11,10 @@ use crate::slugfmt::certificate::section::signing::signing::Signing;
 pub struct CertType(pub String);
 
 pub struct X59Certificate {
-    cert: CertType,
-    required: RequiredInfo,
+    pub cert: CertType,
+    pub required: RequiredInfo,
 
     // CodeSigning
-    signing: Option<Signing>,
+    pub signing: Option<Signing>,
 }
 
