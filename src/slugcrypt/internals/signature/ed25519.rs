@@ -35,8 +35,25 @@ pub struct ED25519SecretKey([u8;32]);
 pub struct ED25519Signature(#[serde(with = "BigArray")][u8;64]);
 
 impl ED25519SecretKey {
+    /// Generates from OS-Generated Random Seed
+    /// 
+    /// ```rust
+    /// fn main() {
+    ///     use libslug::slugcrypt::internals::signature::ed25519;
+    /// 
+    ///     // Generate Secret Key From Operating System Randomness
+    ///     let sk = ed25519::ED25519SecretKey::generate();
+    /// }
+    /// ```
     pub fn generate() -> ED25519SecretKey {
         let csprng = SlugCSPRNG::os_rand();
+        let signing_key = SigningKey::from_bytes(&csprng);
+
+        return ED25519SecretKey(signing_key.to_bytes())
+    }
+    /// Generates ED25519 Secret Key From Password With OS-Generated Salt using Argon2id and pushes into ChaCha20RNG to generate seed.
+    pub fn generate_securerand(pass: &str) -> ED25519SecretKey {
+        let csprng = SlugCSPRNG::new(pass);
         let signing_key = SigningKey::from_bytes(&csprng);
 
         return ED25519SecretKey(signing_key.to_bytes())

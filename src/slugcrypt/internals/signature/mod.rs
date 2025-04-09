@@ -7,3 +7,5 @@ pub mod ed25519;
 
 /// Schnorr Digital Signature
 pub mod schnorr;
+
+pub mod ecdsa;

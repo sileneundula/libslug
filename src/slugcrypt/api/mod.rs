@@ -25,10 +25,12 @@ use crate::slugcrypt::internals::bip39::SlugMnemonic;
 use super::internals::ciphertext::CipherText;
 
 impl SlugCrypt {
+    /// Encrypt Using XChaCha20Poly1305
     pub fn encrypt<T: AsRef<[u8]>>(key: EncryptionKey, data: T) -> Result<(EncryptionCipherText,EncryptionNonce),chacha20poly1305::aead::Error> {
         let x = SlugEncrypt::encrypt(key, data.as_ref())?;
         return Ok(x)
     }
+    /// Decrypt Using XChaCha20Poly1305
     pub fn decrypt(key: EncryptionKey, nonce: EncryptionNonce, data: EncryptionCipherText) -> Result<Vec<u8>,chacha20poly1305::aead::Error> {
         let x = SlugEncrypt::decrypt(key, nonce, data)?;
         return Ok(x)

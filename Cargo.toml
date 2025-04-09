@@ -59,10 +59,12 @@ morus = "0.1.3"
 # PQ Signatures
 pqcrypto-sphincsplus = "0.7.0"
 pqcrypto-traits = "0.3.5"
+pqcrypto-falcon = "0.4.0"
 
 # Signatures
 ed25519-dalek = {version = "2.1.1", features=["rand_core"]}
 schnorrkel = "0.11.4"
+ecdsa = "0.16.9"
 
 # Array
 hybrid-array = "0.2.3"
