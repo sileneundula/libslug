@@ -9,3 +9,5 @@ pub mod ed25519;
 pub mod schnorr;
 
 pub mod ecdsa;
+
+pub mod falcon;
