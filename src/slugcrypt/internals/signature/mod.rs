@@ -11,3 +11,5 @@ pub mod schnorr;
 pub mod ecdsa;
 
 pub mod falcon;
+
+pub mod ml_dsa;

@@ -65,6 +65,7 @@ pqcrypto-falcon = "0.4.0"
 ed25519-dalek = {version = "2.1.1", features=["rand_core"]}
 schnorrkel = "0.11.4"
 ecdsa = "0.16.9"
+ml-dsa = "0.0.4"
 
 # Array
 hybrid-array = "0.2.3"
