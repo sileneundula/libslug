@@ -1,12 +1,25 @@
 use pqcrypto_falcon::falconpadded1024;
-use pqcrypto_traits::sign::{PublicKey,SecretKey};
+
+use pqcrypto_traits::sign::{PublicKey,SecretKey,DetachedSignature};
+
+///! Falcon1024 Signature Scheme Implementation
+/// 
+/// Falcon1024 is a post-quantum signature scheme based on the Falcon algorith.
+/// 
+/// Public Key Size: 1793 bytes
+/// Secret Key Size: 2305 bytes
+/// Signature Size: 1280 bytes
 
 pub struct Falcon1024PublicKey {
-    pk: [u8; 1793],
+    pk: [u8; 1_793],
 }
 
 pub struct Falcon1024SecretKey {
-    sk: [u8; 2305],
+    sk: [u8; 2_305],
+}
+
+pub struct Falcon1024Signature {
+    signature: [u8; 1_280],
 }
 
 pub struct SlugFalcon1024;
@@ -28,7 +41,81 @@ impl SlugFalcon1024 {
     }
 }
 
+impl Falcon1024PublicKey {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
+        let mut pk_array = [0u8; 1793];
+        if bytes.len() == 1793 {
+            pk_array.copy_from_slice(bytes);
+            Ok(Self { pk: pk_array })
+        } else {
+            Err("Invalid length for Falcon1024 public key".to_string())
+        }
+    }
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.pk
+    }
+    pub fn to_usable_type(&self) -> falconpadded1024::PublicKey {
+        falconpadded1024::PublicKey::from_bytes(&self.pk).unwrap()
+    }
+    pub fn verify(&self, message: &[u8], signature: &Falcon1024Signature) -> Result<bool, String> {
+        let pkh = self.to_usable_type();
+        let sigh = falconpadded1024::DetachedSignature::from_bytes(&signature.as_bytes()).unwrap();
+        let result = falconpadded1024::verify_detached_signature(&sigh, message, &pkh);
+
+        return match result {
+            Ok(()) => Ok(true),
+            Err(e) => Err(format!("Verification failed: {}", e)),
+        }
+    }
+}
+
+impl Falcon1024SecretKey {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
+        let mut sk_array = [0u8; 2305];
+        if bytes.len() == 2305 {
+            sk_array.copy_from_slice(bytes);
+            Ok(Self { sk: sk_array })
+        } else {
+            Err("Invalid length for Falcon1024 secret key".to_string())
+        }
+    }
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.sk
+    }
+    pub fn to_usable_type(&self) -> falconpadded1024::SecretKey {
+        falconpadded1024::SecretKey::from_bytes(&self.sk).unwrap()
+    }
+    pub fn sign(&self, message: &[u8]) -> Result<Falcon1024Signature, String> {
+        let skh = self.to_usable_type();
+        let signature = falconpadded1024::detached_sign(message, &skh);
+        println!("Signature Bytes: {}", signature.as_bytes().len());
+
+
+        let mut sig_array = [0u8; 1280]; 
+        sig_array.copy_from_slice(signature.as_bytes());
+        Ok(Falcon1024Signature { signature: sig_array })
+    }
+}
+
+impl Falcon1024Signature {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
+        let mut sig_array = [0u8; 1280];
+        if bytes.len() == 1280 {
+            sig_array.copy_from_slice(bytes);
+            Ok(Self { signature: sig_array })
+        } else {
+            Err("Invalid length for Falcon1024 signature".to_string())
+        }
+    }
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.signature
+    }
+    pub fn to_usable_type(&self) -> falconpadded1024::DetachedSignature {
+        falconpadded1024::DetachedSignature::from_bytes(&self.signature).unwrap()
+    }
+}
+
 #[test]
 fn test_falcon_generate() {
-    SlugFalcon1024::generate();
+    let (pk,sk) = SlugFalcon1024::generate();
 }

@@ -48,7 +48,7 @@ impl SlugMLDSA3 {
         let public_key: MLDSA3PublicKey = MLDSA3PublicKey { pk: pk_output };
         let secret_key: MLDSA3SecretKey = MLDSA3SecretKey { sk: sk_output };
 
-        return MLDSAKeypair {
+        return MLDSA3Keypair {
             public_key,
             secret_key,
         }
@@ -78,16 +78,19 @@ impl MLDSA3SecretKey {
     pub fn as_bytes(&self) -> &[u8] {
         &self.sk
     }
+    /*
     pub fn to_usable_type(&self) -> Result<ml_dsa::SigningKey<ml_dsa::MlDsa65>, ml_dsa::Error> {
-        ml_dsa::SigningKey::decode(&self.sk)
+        //ml_dsa::SigningKey::decode(&self.sk)
     }
+    
     pub fn sign<T: AsRef<[u8]>>(&self, message: T) -> Result<ml_dsa::Signature<ml_dsa::MlDsa65>, ml_dsa::Error> {
         let sk = self.to_usable_type()?;
         Ok(sk.sign(message.as_ref()))
     }
+    */
 }
 
 #[test]
 fn gen() {
-    let keypair = SlugMLDSA::generate();
+    
 }
