@@ -12,7 +12,8 @@ It extends to include development of modern, decentralized PKI systems and modul
 
 - **Default Encryption:** ECIES Encryption over Curve25519 using AES-GCM
 - **Post-Quantum Encryption:** ML-KEM
-- **Signature Schemes:** ED25519, SPHINCS+ (SHAKE256), Schnorr over Ristretto (Curve25519)
+- **Signature Schemes:** ED25519, Schnorr over Ristretto (Curve25519)
+- **Post-Quantum Signature Schemes:** SPHINCS+ (SHAKE256) (Level 5), ML_DSA56 (Level 3), FALCON1024
 - **Cert Format:** X59 Certificate Standard
 - **Message-Types:** Supports UTF-8 Messages (so we can include emojis)
 - **Encryption:** AES-GCM 256 + XChaCha20-Poly1305

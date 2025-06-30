@@ -2,6 +2,9 @@ use pqcrypto_falcon::falconpadded1024;
 
 use pqcrypto_traits::sign::{PublicKey,SecretKey,DetachedSignature};
 
+use subtle_encoding::hex::Hex;
+use subtle_encoding::Encoding;
+
 ///! Falcon1024 Signature Scheme Implementation
 /// 
 /// Falcon1024 is a post-quantum signature scheme based on the Falcon algorith.
@@ -54,6 +57,24 @@ impl Falcon1024PublicKey {
     pub fn as_bytes(&self) -> &[u8] {
         &self.pk
     }
+    pub fn to_hex_upper(&self) -> Result<String, subtle_encoding::Error> {
+        let hex = Hex::upper_case();
+        return hex.encode_to_string(&self.pk)
+    }
+    pub fn to_hex_lower(&self) -> Result<String, subtle_encoding::Error> {
+        let hex = Hex::lower_case();
+        return hex.encode_to_string(&self.pk)
+    }
+    pub fn from_hex_lower(&self, s_hex: &str) -> Result<Self, String> {
+        let hex = Hex::lower_case();
+        let decoded = hex.decode_from_str(s_hex);
+        return Self::from_bytes(&decoded.unwrap());
+    }
+    pub fn from_hex_upper(&self, s_hex: &str) -> Result<Self, String> {
+        let hex = Hex::upper_case();
+        let decoded = hex.decode_from_str(s_hex);
+        return Self::from_bytes(&decoded.unwrap());
+    }
     pub fn to_usable_type(&self) -> falconpadded1024::PublicKey {
         falconpadded1024::PublicKey::from_bytes(&self.pk).unwrap()
     }
@@ -95,6 +116,24 @@ impl Falcon1024SecretKey {
         sig_array.copy_from_slice(signature.as_bytes());
         Ok(Falcon1024Signature { signature: sig_array })
     }
+    pub fn to_hex_upper(&self) -> Result<String, subtle_encoding::Error> {
+        let hex = Hex::upper_case();
+        return hex.encode_to_string(&self.sk)
+    }
+    pub fn to_hex_lower(&self) -> Result<String, subtle_encoding::Error> {
+        let hex = Hex::lower_case();
+        return hex.encode_to_string(&self.sk)
+    }
+    pub fn from_hex_lower(&self, s_hex: &str) -> Result<Self, String> {
+        let hex = Hex::lower_case();
+        let decoded = hex.decode_from_str(s_hex);
+        return Self::from_bytes(&decoded.unwrap());
+    }
+    pub fn from_hex_upper(&self, s_hex: &str) -> Result<Self, String> {
+        let hex = Hex::upper_case();
+        let decoded = hex.decode_from_str(s_hex);
+        return Self::from_bytes(&decoded.unwrap());
+    }
 }
 
 impl Falcon1024Signature {
@@ -112,6 +151,24 @@ impl Falcon1024Signature {
     }
     pub fn to_usable_type(&self) -> falconpadded1024::DetachedSignature {
         falconpadded1024::DetachedSignature::from_bytes(&self.signature).unwrap()
+    }
+    pub fn to_hex_upper(&self) -> Result<String, subtle_encoding::Error> {
+        let hex = Hex::upper_case();
+        return hex.encode_to_string(&self.signature)
+    }
+    pub fn to_hex_lower(&self) -> Result<String, subtle_encoding::Error> {
+        let hex = Hex::lower_case();
+        return hex.encode_to_string(&self.signature)
+    }
+    pub fn from_hex_lower(&self, s_hex: &str) -> Result<Self, String> {
+        let hex = Hex::lower_case();
+        let decoded = hex.decode_from_str(s_hex);
+        return Self::from_bytes(&decoded.unwrap());
+    }
+    pub fn from_hex_upper(&self, s_hex: &str) -> Result<Self, String> {
+        let hex = Hex::upper_case();
+        let decoded = hex.decode_from_str(s_hex);
+        return Self::from_bytes(&decoded.unwrap());
     }
 }
 
