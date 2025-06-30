@@ -11,8 +11,8 @@ fn main() {
     println!("Secret Key: {:?}", keypair.secret_key().sk);
 
     // Sign a message
-    let message = b"Hello, ML_DSA3!";
-    let ctx = b"Context";
+    let message = "Hello, ML_DSA3!";
+    let ctx = "Context";
     let signature: MLDSA3Signature = keypair.sign(message, ctx).unwrap();
 
     // Display Signature
