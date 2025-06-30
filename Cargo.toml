@@ -69,4 +69,6 @@ ml-dsa = "0.0.4"
 
 # Array
 hybrid-array = "0.2.3"
+
+hybrid-array-new = {package="hybrid-array", version="0.3.1"}
 serde-big-array = "0.5.1"
