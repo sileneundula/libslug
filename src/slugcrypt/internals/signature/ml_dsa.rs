@@ -72,6 +72,9 @@ impl MLDSA3Keypair {
     pub fn sign<T: AsRef<[u8]>>(&self, message: T, ctx: T) -> Result<MLDSA3Signature, ml_dsa::Error> {
         self.secret_key.sign(message, ctx)
     }
+    pub fn verify<T: AsRef<[u8]>>(&self, message: T, ctx: T, signature: &MLDSA3Signature) -> Result<bool, ml_dsa::Error> {
+        self.public_key.verify(message, ctx, signature)
+    }
 }
 
 impl MLDSA3PublicKey {
@@ -92,6 +95,11 @@ impl MLDSA3PublicKey {
         let hybrid = hybrid_array_new::ArrayN::<u8, 1952>::from_slice(&self.pk);
         let usable: ml_dsa::VerifyingKey<ml_dsa::MlDsa65> = ml_dsa::VerifyingKey::decode(hybrid);
         return usable;
+    }
+    pub fn verify<T: AsRef<[u8]>>(&self, message: T, ctx: T, signature: &MLDSA3Signature) -> Result<bool, ml_dsa::Error> {
+        let vk = self.to_usable_type();
+        let sig = signature.to_usable_type();
+        Ok(vk.verify_with_context(message.as_ref(), ctx.as_ref(), &sig))
     }
 }
 
@@ -127,9 +135,9 @@ impl MLDSA3SecretKey {
 
 impl MLDSA3Signature {
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, SlugErrors> {
-        let mut sig_array: [u8; 1424] = [0u8; 1424];
+        let mut sig_array: [u8; 3309] = [0u8; 3309];
 
-        if bytes.len() == 1424 {
+        if bytes.len() == 3309 {
             sig_array.copy_from_slice(bytes);
             Ok(Self { signature: sig_array })
         } 
@@ -150,7 +158,10 @@ impl MLDSA3Signature {
 #[test]
 fn gen() {
     let keypair = SlugMLDSA3::generate();
-    keypair.sign("Hello, Word!", "Context").unwrap();
+    let signature = keypair.sign("Hello, ML_DSA3!", "Context").unwrap();
+    let is_valid = keypair.verify("Hello, ML_DSA3!", "Context", &signature);
+
+    println!("Is_Valid: {}", is_valid.unwrap());
 
 
 }

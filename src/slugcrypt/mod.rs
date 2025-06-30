@@ -5,3 +5,6 @@ pub mod slug;
 pub mod internals;
 
 pub mod api;
+
+/// SlugUsage
+pub mod slugusage;

@@ -57,10 +57,10 @@ impl Falcon1024PublicKey {
     pub fn to_usable_type(&self) -> falconpadded1024::PublicKey {
         falconpadded1024::PublicKey::from_bytes(&self.pk).unwrap()
     }
-    pub fn verify(&self, message: &[u8], signature: &Falcon1024Signature) -> Result<bool, String> {
+    pub fn verify<T: AsRef<[u8]>>(&self, message: T, signature: &Falcon1024Signature) -> Result<bool, String> {
         let pkh = self.to_usable_type();
         let sigh = falconpadded1024::DetachedSignature::from_bytes(&signature.as_bytes()).unwrap();
-        let result = falconpadded1024::verify_detached_signature(&sigh, message, &pkh);
+        let result = falconpadded1024::verify_detached_signature(&sigh, message.as_ref(), &pkh);
 
         return match result {
             Ok(()) => Ok(true),
@@ -85,9 +85,9 @@ impl Falcon1024SecretKey {
     pub fn to_usable_type(&self) -> falconpadded1024::SecretKey {
         falconpadded1024::SecretKey::from_bytes(&self.sk).unwrap()
     }
-    pub fn sign(&self, message: &[u8]) -> Result<Falcon1024Signature, String> {
+    pub fn sign<T: AsRef<[u8]>>(&self, message: T) -> Result<Falcon1024Signature, String> {
         let skh = self.to_usable_type();
-        let signature = falconpadded1024::detached_sign(message, &skh);
+        let signature = falconpadded1024::detached_sign(message.as_ref(), &skh);
         println!("Signature Bytes: {}", signature.as_bytes().len());
 
 
@@ -118,4 +118,7 @@ impl Falcon1024Signature {
 #[test]
 fn test_falcon_generate() {
     let (pk,sk) = SlugFalcon1024::generate();
+    let sig = sk.sign(b"Message").unwrap();
+    let is_valid = pk.verify(b"Message", &sig).unwrap();
+    assert_eq!(is_valid, true);
 }
