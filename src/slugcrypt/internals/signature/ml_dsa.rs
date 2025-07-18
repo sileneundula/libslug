@@ -3,8 +3,13 @@ use rand::rngs::OsRng;
 
 use serde::{Serialize, Deserialize};
 use serde_big_array::BigArray;
+//use subtle_encoding::Hex;
 use zeroize::{Zeroize, ZeroizeOnDrop};
 use crate::errors::SlugErrors;
+
+use subtle_encoding::Encoding;
+use subtle_encoding::hex;
+use subtle_encoding::Error as HexError;
 
 //use hybrid_array::ArrayN;
 use hybrid_array_new::ArrayN;
@@ -88,6 +93,10 @@ impl MLDSA3PublicKey {
             Err(SlugErrors::InvalidLengthFromBytes)
         }
     }
+    pub fn from_hex<T: AsRef<str>>(s_hex: T) -> Result<Vec<u8>,HexError> {
+        let decoded = hex::decode_upper(s_hex.as_ref().as_bytes())?;
+        Ok(decoded)
+    }
     pub fn as_bytes(&self) -> &[u8] {
         &self.pk
     }
@@ -113,6 +122,10 @@ impl MLDSA3SecretKey {
         } else {
             Err(SlugErrors::InvalidLengthFromBytes)
         }
+    }
+    pub fn from_hex<T: AsRef<str>>(s_hex: T) -> Result<Vec<u8>,HexError> {
+        let decoded = hex::decode_upper(s_hex.as_ref().as_bytes())?;
+        Ok(decoded)
     }
     pub fn as_bytes(&self) -> &[u8] {
         &self.sk

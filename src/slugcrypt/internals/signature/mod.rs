@@ -13,3 +13,10 @@ pub mod ecdsa;
 pub mod falcon;
 
 pub mod ml_dsa;
+
+pub mod ed448;
+
+
+/// One-Time Signatures (Lamport Signatures, Winternitz-OTS)
+//#[cfg(feature = "OTS")]
+pub mod onetimesigs;
