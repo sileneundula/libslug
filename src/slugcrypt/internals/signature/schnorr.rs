@@ -24,16 +24,16 @@ pub struct SchnorrPublicKey([u8;32]);
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone)]
 pub struct SchnorrSecretKey(#[serde(with = "BigArray")][u8;64]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone)]
 pub struct SchnorrSignature(#[serde(with = "BigArray")][u8;64]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone)]
 pub struct SchnorrVRFProof(#[serde(with = "BigArray")]pub [u8;64]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug, Clone)]
 pub struct SchnorrIO(pub [u8;32]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug)]
+#[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Debug, Clone)]
 pub struct SchnorrPreout(pub [u8;32]);
 
 impl SchnorrIO {

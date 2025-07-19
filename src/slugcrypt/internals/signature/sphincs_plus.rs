@@ -25,7 +25,7 @@ pub struct SPHINCSSecretKey {
     sk: [u8;128]
 }
 
-#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize)]
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize,Clone)]
 pub struct SPHINCSSignature {
     #[serde(with = "BigArray")]
     signature: [u8;29_792],

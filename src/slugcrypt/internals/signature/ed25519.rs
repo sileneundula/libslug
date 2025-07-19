@@ -31,7 +31,7 @@ pub struct ED25519PublicKey([u8;32]);
 #[derive(Zeroize,ZeroizeOnDrop,Serialize,Deserialize, Clone, Debug)]
 pub struct ED25519SecretKey([u8;32]);
 
-#[derive(Zeroize,ZeroizeOnDrop,Debug,Serialize,Deserialize)]
+#[derive(Zeroize,ZeroizeOnDrop,Debug,Serialize,Deserialize, Clone)]
 pub struct ED25519Signature(#[serde(with = "BigArray")][u8;64]);
 
 impl ED25519SecretKey {

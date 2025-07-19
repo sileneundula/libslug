@@ -5,6 +5,10 @@ use pqcrypto_traits::sign::{PublicKey,SecretKey,DetachedSignature};
 use subtle_encoding::hex::Hex;
 use subtle_encoding::Encoding;
 
+use serde::{Serialize,Deserialize};
+use zeroize::{Zeroize,ZeroizeOnDrop};
+use serde_big_array::BigArray;
+
 ///! Falcon1024 Signature Scheme Implementation
 /// 
 /// Falcon1024 is a post-quantum signature scheme based on the Falcon algorith.
@@ -13,15 +17,21 @@ use subtle_encoding::Encoding;
 /// Secret Key Size: 2305 bytes
 /// Signature Size: 1280 bytes
 
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize,Clone)]
 pub struct Falcon1024PublicKey {
+    #[serde(with = "BigArray")]
     pk: [u8; 1_793],
 }
 
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize,Clone)]
 pub struct Falcon1024SecretKey {
+    #[serde(with = "BigArray")]
     sk: [u8; 2_305],
 }
 
+#[derive(Debug,Zeroize,ZeroizeOnDrop,Serialize,Deserialize,Clone)]
 pub struct Falcon1024Signature {
+    #[serde(with = "BigArray")]
     signature: [u8; 1_280],
 }
 
