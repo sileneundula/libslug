@@ -1,5 +1,13 @@
 # Slug20 Library
 
+![Static Badge](https://img.shields.io/badge/%2Fsilene%2Fslug20-libslug-blue?style=flat-square)
+![Crates.io Version](https://img.shields.io/crates/v/libslug?style=flat-square)
+![Crates.io License](https://img.shields.io/crates/l/libslug?style=flat-square)
+![Deps.rs Crate Dependencies (latest)](https://img.shields.io/deps-rs/libslug/latest?style=flat-square)
+![Crates.io Total Downloads](https://img.shields.io/crates/d/libslug?style=flat-square)
+![Crates.io Dependents](https://img.shields.io/crates/dependents/libslug?style=flat-square)
+
+
 ## Description
 
 `slug20` is a tool used to encrypt data inspired by **minisign**. It is simple, minimilastic, and has advanced security built-in. It implements `zeroize`, `subtle`, and `subtle-encoding` for maxmimum security.
