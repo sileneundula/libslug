@@ -1,7 +1,16 @@
+//! # SHA2
+//! 
+//! SHA2 is a standard hash function widely used in the industry, specifically SHA256. This module contains SHA2 with the sizes of {224,256,384,512} bits.
+//! 
+//! SHA2 is generally regarded as one of the most used hash functions and has reliability through its long usage.
+
 use sha2::Digest;
 use sha2::Sha384;
 use sha2::Sha512;
 
+/// # SHA2 Hasher
+/// 
+/// SHA2 Hashing Instance of Different Sizes (256,384,512)
 pub struct Sha2Hasher(usize);
 
 enum Hasher {

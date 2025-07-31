@@ -10,5 +10,9 @@ pub mod x59;
 /// Constants
 pub mod constants;
 
+/// Errors
 pub mod errors;
+
+/// Prelude
+pub mod prelude;
 
