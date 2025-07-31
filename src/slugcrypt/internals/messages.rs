@@ -1,6 +1,6 @@
-/// # Message
-/// 
-/// The **Message Module** contains all methods used for messages sent and received. They are contained in a vector allocated on the heap with **zeroize support**. The message supports an encoding type which reveals the data input to the message. All messages are encoded as UTF-8 bringing modern encoding to cryptography. This means you can encrypt emojis and other languages while having the safety benefits. There is also support for subtle-encoding, encoding the data as constant-time.
+//! # Message
+//! 
+//! The **Message Module** contains all methods used for messages sent and received. They are contained in a vector allocated on the heap with **zeroize support**. The message supports an encoding type which reveals the data input to the message. All messages are encoded as UTF-8 bringing modern encoding to cryptography. This means you can encrypt emojis and other languages while having the safety benefits. There is also support for subtle-encoding, encoding the data as constant-time.
 
 use std::str::{self, Utf8Error};
 use serde::{Serialize,Deserialize};

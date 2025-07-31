@@ -92,12 +92,12 @@ use super::internals::ciphertext::CipherText;
 impl SlugCrypt {
     /// Encrypt Using XChaCha20Poly1305
     pub fn encrypt<T: AsRef<[u8]>>(key: EncryptionKey, data: T) -> Result<(EncryptionCipherText,EncryptionNonce),chacha20poly1305::aead::Error> {
-        let x = SlugEncrypt::encrypt(key, data.as_ref())?;
+        let x = XChaCha20Encrypt::encrypt(key, data.as_ref())?;
         return Ok(x)
     }
     /// Decrypt Using XChaCha20Poly1305
     pub fn decrypt(key: EncryptionKey, nonce: EncryptionNonce, data: EncryptionCipherText) -> Result<Vec<u8>,chacha20poly1305::aead::Error> {
-        let x = SlugEncrypt::decrypt(key, nonce, data)?;
+        let x = XChaCha20Encrypt::decrypt(key, nonce, data)?;
         return Ok(x)
     }
     /// Encrypt Using AES256-GCM
@@ -114,33 +114,37 @@ impl SlugCrypt {
 
 impl SlugDigest {
     /// BLAKE2B with variable digest size from 1-64 bytes (8-512 bits)
+    /// 
+    /// Defaults to 48 bytes if invalid value added
     pub fn blake2b(size: usize, data: &[u8]) -> digest::SlugDigest {
         let hasher = blake2::SlugBlake2bHasher::new(size);
         let result = hasher.update(data);
         return digest::SlugDigest::from_bytes(&result).unwrap()
     }
     /// Blake2s with variable digest size from 1-32 bytes (8-256 bits)
+    /// 
+    /// Defaults to 32 bytes if invalid value added
     pub fn blake2s(size: usize, data: &[u8]) -> digest::SlugDigest {
         let hasher = blake2::SlugBlake2sHasher::new(size);
         let result = hasher.update(data);
         return digest::SlugDigest::from_bytes(&result).unwrap()
     }
-    /// SHA2 with SHA2-224, SHA256, SHA384, SHA512
+    /// SHA2 with SHA2-224, SHA256, SHA384, SHA512 (defaults to 512 if invalid value added)
     pub fn sha2(size: usize, data: &[u8]) -> digest::SlugDigest {
         let hasher = sha2::Sha2Hasher::new(size);
-        let result = hasher.hash(data);
+        let result = hasher.update(data);
         return digest::SlugDigest::from_bytes(&result).unwrap()
     }
     /// SHA3 with SHA3-224, SHA3-256, SHA3-384, SHA3-512
     pub fn sha3(size: usize, data: &[u8]) -> digest::SlugDigest {
         let hasher = sha3::Sha3Hasher::new(size);
-        let result = hasher.digest(data);
+        let result = hasher.update(data);
         return digest::SlugDigest::from_bytes(&result).unwrap()
     }
     /// The efficient BLAKE3 hash function with byte size of 32 bytes
     pub fn blake3(data: &[u8]) -> digest::SlugDigest {
         let mut hasher = blake3::Blake3Hasher::new();
-        let result = hasher.digest(data);
+        let result = hasher.update(data);
         return digest::SlugDigest::from_bytes(&result).unwrap()
     }
 }

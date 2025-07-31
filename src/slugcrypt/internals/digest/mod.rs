@@ -5,7 +5,7 @@
 //! ## Hash Functions
 //! 
 //! [X] BLAKE2 (BLAKE2s and BLAKE2b)
-//! [X] SHA2 (224,256,384,512)
+//! [X] SHA2 (224,256,384*,512)
 //! [X] SHA3 (224,256,384,512)
 //! [X] BLAKE3
 //! 

@@ -1,3 +1,16 @@
+//! # FALCON1024
+//! 
+//! ## Description
+//! 
+//! FALCON1024 is a post-quantum algorithm for digital signatures.
+//! 
+//! This implementation includes zeroize, serialization, and more.
+//! 
+//! ## Features
+//! 
+//! - Signing
+//! - Verification
+
 use pqcrypto_falcon::falconpadded1024;
 
 use pqcrypto_traits::sign::{PublicKey,SecretKey,DetachedSignature};
