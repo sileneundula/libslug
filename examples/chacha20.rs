@@ -12,10 +12,10 @@ fn main() {
     println!("Key Hex (Using Constant-Time(ish)): {}", &key_hex);
 
     // Encrypt Message Using XChaCha20-Poly1305
-    let (eciphertext, nonce) = SlugEncrypt::encrypt(key, "This message is to be encrypted using XCHACHA20-POLY1305").unwrap();
+    let (eciphertext, nonce) = XChaCha20Encrypt::encrypt(key, "This message is to be encrypted using XCHACHA20-POLY1305").unwrap();
 
     // Get the Message As Bytes
-    let message = SlugEncrypt::decrypt(EncryptionKey::from_hex(&key_hex).unwrap(), nonce, eciphertext).unwrap();
+    let message = XChaCha20Encrypt::decrypt(EncryptionKey::from_hex(&key_hex).unwrap(), nonce, eciphertext).unwrap();
 
     // Get Message as UTF-8
     let decoded_msg = String::from_utf8(message).unwrap();
