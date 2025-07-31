@@ -4,7 +4,7 @@ use crate::slugcrypt::internals::digest::blake2::SlugBlake2sHasher;
 use crate::slugcrypt::internals::digest::digest::SlugDigest;
 use serde_encrypt::traits::SerdeEncryptSharedKey;
 
-use crate::slugcrypt::internals::encrypt::chacha20::{EncryptionCipherText,EncryptionKey,EncryptionNonce,SlugEncrypt};
+use crate::slugcrypt::internals::encrypt::chacha20::{EncryptionCipherText,EncryptionKey,EncryptionNonce,XChaCha20Encrypt};
 
 #[derive(Serialize,Deserialize,Debug,Clone)]
 pub struct KeyPairFormat {
@@ -45,7 +45,7 @@ impl KeyPairFormat {
             KeypairAlgorithm::ENC_MLKEM => KeypairType::Encryption,
         };
 
-        let hasher = SlugBlake2sHasher::new(8).hash(pk.as_ref().to_string());
+        let hasher = SlugBlake2sHasher::new(8).update(pk.as_ref().to_string());
         let digest = SlugDigest::from_bytes(&hasher).unwrap();
         
         Self {

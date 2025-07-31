@@ -44,7 +44,7 @@ impl SlugEncryptKey {
             alg: SlugEncryptAlgorithm::AES256GCM,
             key: key.to_hex().unwrap(),
             nonce: nonce.to_hex().unwrap(),
-            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).hash(key.to_hex().unwrap().as_bytes())).unwrap().to_string().as_str().to_string()
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).update(key.to_hex().unwrap().as_bytes())).unwrap().to_string().as_str().to_string()
         };
         key
     }
@@ -55,7 +55,7 @@ impl SlugEncryptKey {
             alg: SlugEncryptAlgorithm::XChaCha20Poly1305,
             key: key.to_hex().unwrap(),
             nonce: nonce.to_hex().unwrap(),
-            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).hash(key.to_hex().unwrap().as_bytes())).unwrap().to_string().as_str().to_string()
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).update(key.to_hex().unwrap().as_bytes())).unwrap().to_string().as_str().to_string()
         };
             return key
     }
@@ -77,7 +77,7 @@ impl SlugEncryptKey {
         let key = chacha20::EncryptionKey::from_hex(&self.key).unwrap();
         let nonce = chacha20::EncryptionNonce::from_hex(&self.nonce).unwrap();
 
-        let message = chacha20::SlugEncrypt::decrypt(key, nonce, ciphertext).unwrap();
+        let message = chacha20::XChaCha20Encrypt::decrypt(key, nonce, ciphertext).unwrap();
         return message;
     }
 }
@@ -90,7 +90,7 @@ impl SlugCipherText {
             alg: SlugEncryptAlgorithm::AES256GCM,
             common_name: name,
             ciphertext: ciphertext.bs58(),
-            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).hash(ciphertext.bs58().as_bytes())).unwrap().to_string().as_str().to_string()
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).update(ciphertext.bs58().as_bytes())).unwrap().to_string().as_str().to_string()
 
         };
         return ct
@@ -102,7 +102,7 @@ impl SlugCipherText {
             alg: SlugEncryptAlgorithm::XChaCha20Poly1305,
             common_name: name,
             ciphertext: ciphertext.bs58(),
-            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).hash(ciphertext.bs58().as_bytes())).unwrap().to_string().as_str().to_string()
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(8).update(ciphertext.bs58().as_bytes())).unwrap().to_string().as_str().to_string()
         };
         return ct
     }
@@ -113,7 +113,7 @@ impl SlugDecryptedOutput {
         SlugDecryptedOutput {
             version: 0u8,
             platform: String::from("SLUGCRYPT"),
-            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(6).hash(&output)).unwrap().to_string().as_str().to_string(),
+            fingerprint: SlugDigest::from_bytes(&SlugBlake2sHasher::new(6).update(&output)).unwrap().to_string().as_str().to_string(),
             output: output,
         }
     }
