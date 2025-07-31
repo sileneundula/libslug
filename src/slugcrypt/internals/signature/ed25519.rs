@@ -162,7 +162,7 @@ impl ED25519SecretKey {
         }
     }
     /// to usable type
-    fn to_usable_type(&self) -> SigningKey {
+    pub fn to_usable_type(&self) -> SigningKey {
         SigningKey::from_bytes(&self.0)
     }
     /// into public key
@@ -247,7 +247,7 @@ impl ED25519Signature {
         }
     }
     /// to usable type
-    fn to_usable_type(&self) -> Signature {
+    pub fn to_usable_type(&self) -> Signature {
         Signature::from_bytes(&self.0)
     }
     /// to base58 string
