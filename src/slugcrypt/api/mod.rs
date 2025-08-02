@@ -13,6 +13,8 @@
 //! For Signatures, it contains the following:
 //! 
 //! 1. SlugED25519Signatures
+//! 2. SlugSchnorrSignatures
+//! 3.
 
 /// # SlugCrypt
 /// 
@@ -48,7 +50,18 @@ pub struct SlugAsyCrypt;
 /// - \[PQ] Winternitz-OTS Signatures
 pub struct SlugSignatures;
 
+/// # ED25519
 pub struct SlugED25519Signatures;
+
+/// # Schnorr Signatures
+pub struct SlugSchnorrSignatures;
+
+/// # 
+pub struct SlugSphincsPlus;
+
+pub struct SlugFalcon1024;
+
+pub struct SlugMLDSA;
 
 /// # Digests
 /// 
@@ -86,6 +99,7 @@ use crate::slugcrypt::internals::csprng::SlugCSPRNG;
 
 use crate::slugcrypt::internals::bip39::SlugMnemonic;
 use crate::slugcrypt::internals::signature::ed25519::{ED25519PublicKey, ED25519SecretKey, ED25519Signature};
+use crate::slugcrypt::internals::signature::schnorr::{SchnorrSecretKey, SchnorrSignature};
 
 use super::internals::ciphertext::CipherText;
 
@@ -171,6 +185,12 @@ impl SlugCSPRNGAPI {
     pub fn from_os() -> [u8;32] {
         SlugCSPRNG::os_rand()
     }
+    pub fn from_seed_64(bytes: [u8;32]) -> [u8;64] {
+        SlugCSPRNG::from_seed_64(bytes)
+    }
+    pub fn from_seed(bytes: [u8;32]) -> [u8;32] {
+        SlugCSPRNG::from_seed(bytes)
+    }
     /// Generate a new Mnemonic
     pub fn mnemonic(mnemonic: SlugMnemonic, pass: &str, language: Language) -> Result<[u8;32],ErrorKind> {
         let seed = mnemonic.to_seed(pass, language)?;
@@ -205,5 +225,15 @@ impl SlugED25519Signatures {
     pub fn verify<T: AsRef<[u8]>>(pk: ED25519PublicKey, signature: ED25519Signature, data: T) -> Result<bool, SignatureError> {
         let is_valid = pk.verify(signature, data)?;
         Ok(is_valid)
+    }
+}
+
+impl SlugSchnorrSignatures {
+    pub fn generate() -> SchnorrSecretKey {
+        let x = SchnorrSecretKey::generate();
+        return x
+    }
+    pub fn sign<T: AsRef<[u8]>>(sk: : T, context: T) -> SchnorrSignature {
+
     }
 }
