@@ -56,7 +56,7 @@ pub struct SlugED25519Signatures;
 /// # Schnorr Signatures
 pub struct SlugSchnorrSignatures;
 
-/// # 
+/// # SPHINCS (PLUS) (SHAKE256)
 pub struct SlugSphincsPlus;
 
 pub struct SlugFalcon1024;
@@ -67,6 +67,8 @@ pub struct SlugMLDSA;
 /// 
 /// Digests API (BLAKE2, SHA2, SHA3, BLAKE3)
 pub struct SlugDigest;
+
+pub struct VerifiableRandomFunction;
 
 /// # SlugCSPRNG
 /// 
@@ -99,7 +101,7 @@ use crate::slugcrypt::internals::csprng::SlugCSPRNG;
 
 use crate::slugcrypt::internals::bip39::SlugMnemonic;
 use crate::slugcrypt::internals::signature::ed25519::{ED25519PublicKey, ED25519SecretKey, ED25519Signature};
-use crate::slugcrypt::internals::signature::schnorr::{SchnorrSecretKey, SchnorrSignature};
+use crate::slugcrypt::internals::signature::schnorr::{SchnorrIO, SchnorrPreout, SchnorrPublicKey, SchnorrSecretKey, SchnorrSignature, SchnorrVRFProof};
 
 use super::internals::ciphertext::CipherText;
 
@@ -202,6 +204,19 @@ impl SlugCSPRNGAPI {
     }
 }
 
+impl VerifiableRandomFunction {
+    pub fn generate() -> SchnorrSecretKey {
+        return SchnorrSecretKey::generate();
+    }
+    pub fn create_schnorr_vrf<T: AsRef<[u8]>>(sk: SchnorrSecretKey, msg: T, context: T) -> (SchnorrIO,SchnorrVRFProof,SchnorrPreout)  {
+        return sk.vrf(msg.as_ref(), context.as_ref())
+    }
+    pub fn verify_schnorr_vrf<T: AsRef<[u8]>>(pk: SchnorrPublicKey, vrf_io: SchnorrIO, vrf_proof: SchnorrVRFProof, vrf_preout: SchnorrPreout, msg: T, context: T) -> Result<(schnorrkel::vrf::VRFInOut, schnorrkel::vrf::VRFProofBatchable),schnorrkel::SignatureError> {
+        let x = pk.verify_vrf(vrf_preout, vrf_io, vrf_proof, context.as_ref(), msg.as_ref())?;
+        return Ok(x)
+    }
+}
+
 impl SlugED25519Signatures {
     /// Generate ED25519 using OS Randomness
     pub fn generate() -> ED25519SecretKey {
@@ -233,7 +248,8 @@ impl SlugSchnorrSignatures {
         let x = SchnorrSecretKey::generate();
         return x
     }
-    pub fn sign<T: AsRef<[u8]>>(sk: : T, context: T) -> SchnorrSignature {
-
+    pub fn sign<T: AsRef<[u8]>>(sk: SchnorrSecretKey, message: T, context: T) -> Result<SchnorrSignature, schnorrkel::SignatureError> {
+        let sig: Result<SchnorrSignature, schnorrkel::SignatureError> = sk.sign_with_context(message.as_ref(), context.as_ref())?;
+        return Ok(sig)
     }
 }
