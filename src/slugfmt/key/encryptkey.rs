@@ -1,3 +1,9 @@
+//! # Encryption Key
+//! 
+//! The "Slug Encryption Key Format (SEKF)" is used for AES256 and XCHACHA20-POLY1305 Symmetric Encryption. It includes the nonce and secret key.
+//! 
+//! It is a simple format serialized into YAML.
+
 use crate::slugcrypt::internals::encrypt::aes256;
 use crate::slugcrypt::internals::encrypt::chacha20;
 use serde::{Serialize,Deserialize};
