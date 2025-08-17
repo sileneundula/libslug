@@ -16,3 +16,5 @@ pub mod aes256;
 
 /// Morus AEAD
 pub mod morus;
+
+pub mod password;
