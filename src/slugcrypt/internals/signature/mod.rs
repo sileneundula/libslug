@@ -44,6 +44,9 @@ pub mod ml_dsa;
 /// ED448
 pub mod ed448;
 
+/// ShulginSigning
+pub mod shulginsigning;
+
 
 /// One-Time Signatures (Lamport Signatures, Winternitz-OTS)
 //#[cfg(feature = "OTS")]

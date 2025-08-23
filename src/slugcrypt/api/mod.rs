@@ -249,7 +249,7 @@ impl SlugSchnorrSignatures {
         return x
     }
     pub fn sign<T: AsRef<[u8]>>(sk: SchnorrSecretKey, message: T, context: T) -> Result<SchnorrSignature, schnorrkel::SignatureError> {
-        let sig: Result<SchnorrSignature, schnorrkel::SignatureError> = sk.sign_with_context(message.as_ref(), context.as_ref())?;
+        let sig: SchnorrSignature = sk.sign_with_context(message.as_ref(), context.as_ref())?;
         return Ok(sig)
     }
 }

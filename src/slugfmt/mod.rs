@@ -8,8 +8,6 @@
 
 
 
-pub mod standardpass;
-
 pub mod filesystem;
 
 pub mod certificate;
