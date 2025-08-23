@@ -13,6 +13,8 @@
 //! For Signatures, it contains the following:
 //! 
 //! 1. SlugED25519Signatures
+//! 2. SlugSchnorrSignatures
+//! 3.
 
 /// # SlugCrypt
 /// 
@@ -48,12 +50,25 @@ pub struct SlugAsyCrypt;
 /// - \[PQ] Winternitz-OTS Signatures
 pub struct SlugSignatures;
 
+/// # ED25519
 pub struct SlugED25519Signatures;
+
+/// # Schnorr Signatures
+pub struct SlugSchnorrSignatures;
+
+/// # SPHINCS (PLUS) (SHAKE256)
+pub struct SlugSphincsPlus;
+
+pub struct SlugFalcon1024;
+
+pub struct SlugMLDSA;
 
 /// # Digests
 /// 
 /// Digests API (BLAKE2, SHA2, SHA3, BLAKE3)
 pub struct SlugDigest;
+
+pub struct VerifiableRandomFunction;
 
 /// # SlugCSPRNG
 /// 
@@ -86,6 +101,7 @@ use crate::slugcrypt::internals::csprng::SlugCSPRNG;
 
 use crate::slugcrypt::internals::bip39::SlugMnemonic;
 use crate::slugcrypt::internals::signature::ed25519::{ED25519PublicKey, ED25519SecretKey, ED25519Signature};
+use crate::slugcrypt::internals::signature::schnorr::{SchnorrIO, SchnorrPreout, SchnorrPublicKey, SchnorrSecretKey, SchnorrSignature, SchnorrVRFProof};
 
 use super::internals::ciphertext::CipherText;
 
@@ -171,6 +187,12 @@ impl SlugCSPRNGAPI {
     pub fn from_os() -> [u8;32] {
         SlugCSPRNG::os_rand()
     }
+    pub fn from_seed_64(bytes: [u8;32]) -> [u8;64] {
+        SlugCSPRNG::from_seed_64(bytes)
+    }
+    pub fn from_seed(bytes: [u8;32]) -> [u8;32] {
+        SlugCSPRNG::from_seed(bytes)
+    }
     /// Generate a new Mnemonic
     pub fn mnemonic(mnemonic: SlugMnemonic, pass: &str, language: Language) -> Result<[u8;32],ErrorKind> {
         let seed = mnemonic.to_seed(pass, language)?;
@@ -179,6 +201,19 @@ impl SlugCSPRNGAPI {
         output.copy_from_slice(&seed);
 
         Ok(output)
+    }
+}
+
+impl VerifiableRandomFunction {
+    pub fn generate() -> SchnorrSecretKey {
+        return SchnorrSecretKey::generate();
+    }
+    pub fn create_schnorr_vrf<T: AsRef<[u8]>>(sk: SchnorrSecretKey, msg: T, context: T) -> (SchnorrIO,SchnorrVRFProof,SchnorrPreout)  {
+        return sk.vrf(msg.as_ref(), context.as_ref())
+    }
+    pub fn verify_schnorr_vrf<T: AsRef<[u8]>>(pk: SchnorrPublicKey, vrf_io: SchnorrIO, vrf_proof: SchnorrVRFProof, vrf_preout: SchnorrPreout, msg: T, context: T) -> Result<(schnorrkel::vrf::VRFInOut, schnorrkel::vrf::VRFProofBatchable),schnorrkel::SignatureError> {
+        let x = pk.verify_vrf(vrf_preout, vrf_io, vrf_proof, context.as_ref(), msg.as_ref())?;
+        return Ok(x)
     }
 }
 
@@ -205,5 +240,16 @@ impl SlugED25519Signatures {
     pub fn verify<T: AsRef<[u8]>>(pk: ED25519PublicKey, signature: ED25519Signature, data: T) -> Result<bool, SignatureError> {
         let is_valid = pk.verify(signature, data)?;
         Ok(is_valid)
+    }
+}
+
+impl SlugSchnorrSignatures {
+    pub fn generate() -> SchnorrSecretKey {
+        let x = SchnorrSecretKey::generate();
+        return x
+    }
+    pub fn sign<T: AsRef<[u8]>>(sk: SchnorrSecretKey, message: T, context: T) -> Result<SchnorrSignature, schnorrkel::SignatureError> {
+        let sig: SchnorrSignature = sk.sign_with_context(message.as_ref(), context.as_ref())?;
+        return Ok(sig)
     }
 }
