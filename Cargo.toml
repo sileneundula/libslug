@@ -68,6 +68,7 @@ ecdsa = "0.16.9"
 k256 = {version = "0.13.4", features=["ecdsa"]}
 ml-dsa = "0.0.4"
 ed448 = "0.4.0"
+ed448-goldilocks-plus = "0.16.0"
 
 # One-Time Signatures
 leslie_lamport = "0.3.1"
