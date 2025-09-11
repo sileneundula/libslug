@@ -3,7 +3,8 @@ use ecdsa::PrimeCurve;
 use ecdsa::signature::Signer;
 use ecdsa::signature::RandomizedSigner;
 use ecdsa::signature::Keypair;
-use k256::ecdsa::{SigningKey, Signature};
+use k256::ecdsa::{SigningKey, Signature, VerifyingKey};
+use k256::Secp256k1;
 use rand::rngs::OsRng;
 
 pub struct ECDSAPublicKey([u8;32]);
@@ -22,6 +23,19 @@ impl ECDSASecretKey {
         bytes.copy_from_slice(&output_bytes);
 
         ECDSASecretKey(bytes)
+    }
+    pub fn sign<T: AsRef<[u8]>>(&self, msg: T) -> {
+
+    }
+    pub fn to_usable_type(&self) -> SigningKey<Secp256k1> {
+        SigningKey::from_bytes(&self.0)
+    }
+    pub fn to_usable_type_pk(&self) -> VerifyingKey<Secp256k1> {
+        self.to_usable_type().verifying_key()
+    }
+    pub fn public_key(&self) -> ECDSAPublicKey {
+        let bytes = self.to_usable_type_pk().to_sec1_bytes();
+        ECDSAPublicKey(bytes)
     }
 }
 
