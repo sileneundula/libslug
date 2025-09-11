@@ -24,8 +24,8 @@ impl ECDSASecretKey {
 
         ECDSASecretKey(bytes)
     }
-    pub fn sign<T: AsRef<[u8]>>(&self, msg: T) -> {
-
+    pub fn sign<T: AsRef<[u8]>>(&self, msg: T) -> Result<() {
+        let signature = self.to_usable_type().sign_recoverable(msg.as_ref())?;
     }
     pub fn to_usable_type(&self) -> SigningKey<Secp256k1> {
         SigningKey::from_bytes(&self.0)
