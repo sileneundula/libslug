@@ -47,6 +47,9 @@ pub mod ed448;
 /// ShulginSigning
 pub mod shulginsigning;
 
+/// FALCON1024
+pub mod hybridfalconsigning;
+
 
 /// One-Time Signatures (Lamport Signatures, Winternitz-OTS)
 //#[cfg(feature = "OTS")]

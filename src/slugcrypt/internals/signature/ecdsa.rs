@@ -7,6 +7,7 @@ use k256::ecdsa::{SigningKey, Signature, VerifyingKey};
 use k256::Secp256k1;
 use rand::rngs::OsRng;
 
+/*
 pub struct ECDSAPublicKey([u8;32]);
 pub struct ECDSASecretKey([u8;32]);
 
@@ -31,7 +32,7 @@ impl ECDSASecretKey {
     pub fn to_usable_type(&self) -> Result<SigningKey,ecdsa::Error> {
         let key: ecdsa::SigningKey<Secp256k1> = SigningKey::from_slice(&self.0)?;
         return Ok(key)
-    }
+    } 
     pub fn to_usable_type_pk(&self) -> VerifyingKey<Secp256k1> {
         self.to_usable_type().verifying_key()?;
     }
@@ -63,7 +64,11 @@ impl ECDSAPublicKey {
     }
 }
 
+
+
 #[test]
 fn ECDSA() {
     ECDSASecretKey::generate();
 }
+
+*/
