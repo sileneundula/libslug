@@ -40,6 +40,33 @@ pub struct ShulginKeypairCompact {
     pub secret_key: Option<String>,
 }
 
+impl ShulginKeypairCompact {
+    pub fn from_pk(keypair: &ShulginKeypair) -> Result<Self,SlugErrors> {
+        let pk = key_to_compact(&keypair);
+
+        if pk.is_err() {
+            return Err(SlugErrors::InvalidLengthFromBytes)
+        }
+        else {
+            return Ok(Self { public_key: pk.unwrap(), secret_key: None })
+        }
+    }
+    pub fn as_str_pk(&self) -> &str {
+        return &self.public_key
+    }
+    pub fn to_str_pk(&self) -> String {
+        return self.public_key.clone()
+    }
+    pub fn contains_secret(&self) -> bool {
+        if self.secret_key.is_some() {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+}
+
 #[derive(Debug,Serialize,Deserialize,Clone,Zeroize,ZeroizeOnDrop)]
 pub struct ShulginSignature {
     pub clsig: ED25519Signature,
@@ -303,4 +330,11 @@ fn from_public_key_compact<T: AsRef<str>>(ss_pk: T) -> Result<ShulginKeypair,Slu
         return Err(SlugErrors::Other(String::from("Key Length Too High")))
     }
 
+}
+
+#[test]
+fn run() {
+    let keypair = ShulginKeypair::generate();
+    let compact = ShulginKeypairCompact::from_pk(&keypair).unwrap();
+    println!("{}",compact.as_str_pk())
 }
