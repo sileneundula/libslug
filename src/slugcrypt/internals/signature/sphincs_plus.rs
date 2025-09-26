@@ -126,6 +126,16 @@ impl SPHINCSPublicKey {
     pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> std::result::Result<Vec<u8>,subtle_encoding::Error> {
         Ok(hex::decode_upper(hex_str.as_ref().as_bytes())?)
     }
+    pub fn from_hex_string_final<T: AsRef<str>>(hex_str: T) -> std::result::Result<Self,SlugErrors> {
+        let x = Self::from_hex_string(hex_str.as_ref());
+
+        if x.is_err() {
+            return Err(SlugErrors::Other(String::from("From Hexadecimal Error")))
+        }
+        else {
+            return Ok(Self::from_bytes(&x.unwrap())?)
+        }
+    }
     /// To Base58 String
     pub fn to_base58_string(&self) -> String {
         self.pk.to_base58()
@@ -224,6 +234,16 @@ impl SPHINCSSignature {
     /// from hex string (upper)
     pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> std::result::Result<Vec<u8>,subtle_encoding::Error> {
         Ok(hex::decode_upper(hex_str.as_ref().as_bytes())?)
+    }
+    pub fn from_hex_string_final<T: AsRef<str>>(hex_str: T) -> std::result::Result<Self, SlugErrors> {
+        let x = Self::from_hex_string(hex_str.as_ref());
+
+        if x.is_err() {
+            return Err(SlugErrors::Other(String::from("SPHINCS+ Signature Error")))
+        }
+        else {
+            return Ok(Self::from_bytes(&x.unwrap())?)
+        }
     }
     /// to base58 string
     pub fn to_base58_string(&self) -> String {

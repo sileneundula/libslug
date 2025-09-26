@@ -10,6 +10,7 @@ pub enum SlugErrors {
     InvalidLengthFromBytes,
     SigningFailure,
     VerifyingError(SlugErrorAlgorithms),
+    Other(String),
 }
 
 #[derive(Debug)]
