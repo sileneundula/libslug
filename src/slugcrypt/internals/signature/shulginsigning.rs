@@ -23,6 +23,9 @@ use crate::slugcrypt::internals::signature::sphincs_plus::{SPHINCSPublicKey,SPHI
 use crate::errors::SlugErrors;
 use crate::errors::SlugErrorAlgorithms;
 
+use slugencode::SlugEncodingUsage;
+use slugencode::SlugEncodings;
+
 use serde::{Serialize,Deserialize};
 use zeroize::{ZeroizeOnDrop,Zeroize};
 
@@ -35,6 +38,7 @@ pub struct ShulginKeypair {
     pub pqsk: Option<SPHINCSSecretKey>,
 }
 
+#[derive(Debug,Serialize,Deserialize,Clone,Zeroize,ZeroizeOnDrop)]
 pub struct ShulginKeypairCompact {
     pub public_key: String,
     pub secret_key: Option<String>,
@@ -71,8 +75,11 @@ impl ShulginKeypairCompact {
 pub struct ShulginSignature {
     pub clsig: ED25519Signature,
     pub pqsig: SPHINCSSignature,
+    
+    //pub rng: Option<[u8;32]>,
 }
 
+#[derive(Debug,Serialize,Deserialize,Clone,Zeroize,ZeroizeOnDrop)]
 pub struct ShulginSignatureCompact {
     pub signature: String,
 }
@@ -335,6 +342,12 @@ fn from_public_key_compact<T: AsRef<str>>(ss_pk: T) -> Result<ShulginKeypair,Slu
 #[test]
 fn run() {
     let keypair = ShulginKeypair::generate();
+    let signature = keypair.sign("This message is being signed.").unwrap();
+
+
+    let sig = signature.into_ss_format();
+
     let compact = ShulginKeypairCompact::from_pk(&keypair).unwrap();
+    
     println!("{}",compact.as_str_pk())
 }

@@ -21,6 +21,7 @@ pub enum SlugErrorAlgorithms {
     SIG_SPHINCS_PLUS,
     SIG_FALCON,
     SIG_MLDSA,
+    SIG_SHULGINSIGNING,
     ENC_ECIES_ED25519,
     ENC_RSA,
     ENC_KYBER,
