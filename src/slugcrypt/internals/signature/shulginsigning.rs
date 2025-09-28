@@ -55,11 +55,28 @@ impl ShulginKeypairCompact {
             return Ok(Self { public_key: pk.unwrap(), secret_key: None })
         }
     }
+    pub fn from_sk(keypair: &ShulginKeypair) -> Result<Self, SlugErrors> {
+        let pk = key_to_compact(keypair);
+        let sk = secret_key_to_compact(keypair);
+
+        if pk.is_err() || sk.is_err() {
+            return Err(SlugErrors::InvalidLengthFromBytes)
+        }
+        else {
+            return Ok(Self {
+                public_key: pk.unwrap(),
+                secret_key: Some(sk.unwrap())
+            })
+        }
+    }
     pub fn as_str_pk(&self) -> &str {
         return &self.public_key
     }
     pub fn to_str_pk(&self) -> String {
         return self.public_key.clone()
+    }
+    pub fn to_str_sk(&self) -> String {
+        return self.secret_key.clone().unwrap()
     }
     pub fn contains_secret(&self) -> bool {
         if self.secret_key.is_some() {
@@ -68,6 +85,9 @@ impl ShulginKeypairCompact {
         else {
             return false
         }
+    }
+    pub fn into_shulginkeypair(&self) {
+        
     }
 }
 
@@ -337,6 +357,22 @@ fn from_public_key_compact<T: AsRef<str>>(ss_pk: T) -> Result<ShulginKeypair,Slu
         return Err(SlugErrors::Other(String::from("Key Length Too High")))
     }
 
+}
+
+
+fn secret_key_to_compact(keypair: &ShulginKeypair) -> Result<String, FromUtf8Error> {
+    let mut output: String = String::new();
+    
+    let delimiter = ":";
+    
+    let ed25519_sk = keypair.clsk.clone().unwrap();
+    let sphincs_sk = keypair.pqsk.clone().unwrap();
+
+    output.push_str(&ed25519_sk.to_hex_string());
+    output.push_str(delimiter);
+    output.push_str(&sphincs_sk.to_hex_string()?);
+
+    return Ok(output)
 }
 
 #[test]
