@@ -28,8 +28,8 @@ pub struct X59Cert<T: X59Certificate> {
 }
 
 impl<T: X59Certificate> X59Certificate for X59Cert<T> {
-    fn into_certificate<U: X59Certificate>(&self) -> X59Cert<U> {
-        X59Cert<U> {
+    fn into_certificate<T: X59Certificate>(&self) -> X59Cert<T> {
+        X59Cert<T> {
             pkh: self.pkh.clone(),
         }
     }
