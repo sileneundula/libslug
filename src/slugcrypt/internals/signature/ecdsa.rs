@@ -7,7 +7,6 @@ use k256::ecdsa::{SigningKey, Signature, VerifyingKey};
 use k256::Secp256k1;
 use rand::rngs::OsRng;
 
-/*
 pub struct ECDSAPublicKey([u8;32]);
 pub struct ECDSASecretKey([u8;32]);
 
@@ -70,5 +69,3 @@ impl ECDSAPublicKey {
 fn ECDSA() {
     ECDSASecretKey::generate();
 }
-
-*/

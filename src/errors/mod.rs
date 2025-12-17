@@ -1,6 +1,8 @@
 //! # Errors
 //! 
-//! This module contains all the error-handling.
+//! This module contains all the error-handling. It uses `thiserror` for error handling.
+
+use thiserror::Error;
 
 /// # SlugErrors
 /// 

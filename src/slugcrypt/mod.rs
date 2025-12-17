@@ -6,3 +6,6 @@ pub mod internals;
 
 /// Interface For Cryptography Operations
 pub mod api;
+
+/// Common Traits
+pub mod traits;
