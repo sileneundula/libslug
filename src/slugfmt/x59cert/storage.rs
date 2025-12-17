@@ -1,3 +1,4 @@
+/*
 use std::collections::HashMap;
 
 type local_key_id = String;
@@ -14,3 +15,4 @@ pub struct KeyRingChecksum {
 pub struct KeyRing {
     pub keys: HashMap<local_key_id, 
 }
+*/

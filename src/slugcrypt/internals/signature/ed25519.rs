@@ -273,7 +273,7 @@ impl ED25519Signature {
 }
 
 impl X59Certificate for ED25519PublicKey {
-    fn into_certificate(&self) -> X59Cert<ED25519PublicKey> {
+    fn into_certificate<T: X59Certificate>(&self) -> X59Cert::<ED25519PublicKey> {
         X59Cert {
             pkh: self.clone()
         }
@@ -290,5 +290,5 @@ fn run() {
 #[test]
 fn ed25519() {
     let sk = ED25519SecretKey::generate();
-    let cert = sk.public_key().unwrap().into_certificate();
+    let cert = sk.public_key().unwrap();
 }

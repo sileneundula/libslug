@@ -27,6 +27,14 @@ pub struct X59Cert<T: X59Certificate> {
     pub pkh: T,
 }
 
+impl<T: X59Certificate> X59Certificate for X59Cert<T> {
+    fn into_certificate<U: X59Certificate>(&self) -> X59Cert<U> {
+        X59Cert<U> {
+            pkh: self.pkh.clone(),
+        }
+    }
+}
+
 pub struct X59CertLocalMetadata {
     pub local_id: String, // 6-bytes
     pub local_keypair_identity: String, // 8-bytes
@@ -34,11 +42,14 @@ pub struct X59CertLocalMetadata {
 }
 
 impl X59CertLocalMetadata {
+    /*
     pub fn new<H: AsRef<str>, T: X59Certificate>(cert: X59Cert<T>, name: H) {
         cert.pkh
     }
+    
     fn digest_of_public_key<T: X59Certificate>(cert: X59Cert<T>) {
 
         SlugDigest::blake2s(6, data)
     }
+    */
 }
