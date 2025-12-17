@@ -23,15 +23,15 @@ pub mod storage;
 /// # [silene/slugfmt/x59cert] X59Cert
 /// 
 /// Contains the Public Key as a generic.
-pub struct X59Cert<T: X59Certificate> {
+pub struct X59Cert<T: X59Certificate + Clone> {
     pub pkh: T,
 }
 
-impl<T: X59Certificate> X59Certificate for X59Cert<T> {
+// TODO: Add implementation
+
+impl X59Certificate for X59Cert {
     fn into_certificate<T: X59Certificate>(&self) -> X59Cert<T> {
-        X59Cert<T> {
-            pkh: self.pkh.clone(),
-        }
+        
     }
 }
 
