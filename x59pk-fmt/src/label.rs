@@ -43,7 +43,11 @@ use std::fmt;
 /// 1. **Pieces** (UTF-8 String Pieces In A Vector)
 /// 2. **Attribute** (An attribute data value that adds context using the `X59ParserSource`)
 /// 
-/// ## 
+/// ## Example Code
+/// 
+/// ```rust
+/// 
+/// ```
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Label {
     pub pieces: Vec<String>,
