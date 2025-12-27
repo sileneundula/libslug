@@ -1,0 +1,8 @@
+[package]
+name = "x59pk-fmt"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+slugencode = "0.1.0"
+fixedstr = "0.5.10"

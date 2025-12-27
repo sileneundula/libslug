@@ -648,6 +648,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28dea519a9695b9977216879a3ebfddf92f1c08c05d984f8996aecd6ecdc811d"
 
 [[package]]
+name = "fixedstr"
+version = "0.5.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75a7e79cc11f1195d9e07bd11509e1d75b51e1f48ddff52f54a25815b4abbde3"
+
+[[package]]
 name = "foreign-types"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2023,6 +2029,14 @@ dependencies = [
  "curve25519-dalek 3.2.0",
  "rand_core 0.5.1",
  "zeroize",
+]
+
+[[package]]
+name = "x59pk-fmt"
+version = "0.1.0"
+dependencies = [
+ "fixedstr",
+ "slugencode",
 ]
 
 [[package]]
