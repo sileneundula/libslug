@@ -89,10 +89,19 @@ pub struct X59Label {
 
 /// # X59 Source
 /// 
-/// The Source Parser. Defaults to X59 System.
+/// The Source Parser. Defaults to X59 System and ecosystem.
+/// 
+/// ## Features
+/// 
+/// - Git-integration
+/// 
+/// - URL
+/// 
+/// - Registries
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Source {
     source: String,
+    provider: Option<String>,
 }
 
 /// # Type of Data
@@ -104,7 +113,58 @@ pub struct X59Source {
 /// 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Type {
+    _lib: TypeLibrary,
     _type: String,
+}
+
+impl Default for X59Type {
+    fn default() -> Self {
+        X59Type {
+            _lib: TypeLibrary::default(),
+            _type: String::from("Raw"),
+        }
+    }
+}
+
+impl fmt::Display for X59Type {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Library: {}",&self._lib )
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
+pub enum TypeLibrary {
+    X59std(u16), // X59std lib (assumed as default)
+    
+    Git(String),
+    URL(String),
+    Other(String),
+}
+
+impl fmt::Display for TypeLibrary {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if Self::X59std(0) == true {
+            write!(f, "X59 Standard Library (Revision: 0x00)")
+        }
+        else if Self::X59std(1) == true {
+            write!(f, "X59 Standard Library (Revision: 0x01)")
+        }
+        else if Self::X59std(0xFFu16) == true {
+            write!(f, "X59 Standard Library Nightly (Revision 0xFF)")
+        }
+        else if Self::X59std(2) == true {
+            write!(f, "X59 Standard Library Slim (Revision 0x02")
+        }
+        else {
+            write!(f, "Unknown Library")
+        }
+    }
+}
+
+impl Default for TypeLibrary {
+    fn default() -> Self {
+        TypeLibrary::X59std(0u16)
+    }
 }
 
 impl X59Source {
