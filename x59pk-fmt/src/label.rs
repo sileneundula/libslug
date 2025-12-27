@@ -45,7 +45,40 @@ use std::fmt;
 /// 
 /// ## Example Code
 /// 
+/// ### Example
+/// 
 /// ```rust
+/// use x59_fmt::prelude::X59Label;
+/// 
+/// fn main() {
+///     // [example/path/parsed/extension]
+///     let _label = X59Label::from_str("example/path/parsed/extension", None);
+/// 
+///     // [(!algorithm)example/path/parsed/extension] using `Source`
+///     let label_with_attribute = X59Label::from_str("example/path/parsed/extension","algorithm")
+/// 
+///     // Outputs to a String
+///     let output = label_with_attribute.into_string();
+/// }
+/// 
+/// ```
+/// 
+/// ### Mutable Example
+/// 
+/// ```rust
+/// 
+/// use x59_fmt::prelude::X59Label;
+/// 
+/// fn main() {
+///     // Generates New X59 Label
+///     let mut label: X59Label = X59Label::new();
+/// 
+///     // Adds Pieces For Path of X59Label (`[test/example/path]<DATA>`)
+///     label.add_pieces(vec!["test","example","path"]);
+/// 
+///     // Outputs into a string
+///     let output: String = label.as_source_label();
+/// }
 /// 
 /// ```
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
@@ -90,6 +123,12 @@ impl X59Source {
         output.push_str(CLOSE);
 
         return output
+    }
+    /// # Into String
+    /// 
+    /// Wrapper around `as_source_label` for ease of access
+    pub fn into_string(&self) -> String {
+        return self.as_source_label()
     }
 }
 
