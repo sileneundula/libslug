@@ -23,4 +23,8 @@ pub const EXTENSION_CURLY_OPEN: &str = "{";
 pub const EXTENSION_CURLY_CLOSE: &str = "}";
 pub const EXTENSION_VALUE_EQUAL: &str = "=";
 
+// Scripting / Constraints
+pub const SCRIPT_EXTENSIONS: &str = "$";
+pub const STD_LIB: &str = "x59-std";
+
 
