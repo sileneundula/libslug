@@ -1,6 +1,18 @@
 //! # X59 Data
 //! 
-//! Author: Joseph P. Tortorelli (Silene/0x20CB)
+//! ## Author
+//! 
+//! Joseph P. Tortorelli (Silene/0x20CB)
+//! 
+//! ## Features
+//! 
+//! - [X] X59-fmt
+//!     - [X] X59Label (`[..]`)
+//!         - [X] Attribute (`(!..)`)
+//!         - [ ] Checksum
+//!     - [ ] X59ParserSource (`@`)
+//!     - [ ] X59DataType (`#`)
+//!         - [ ] Source
 //! 
 //! TODO:
 //! 
@@ -22,9 +34,16 @@ use std::fmt;
 
 /// # X59 Label
 /// 
+/// ## Description
+/// 
 /// The core component of `X59-fmt`, an *X59Label* functions to add context to values, including structured data in extensions.
 /// 
-/// A Label that can be used to extend functionality of data.
+/// X59Label consists of two data values:
+/// 
+/// 1. **Pieces** (UTF-8 String Pieces In A Vector)
+/// 2. **Attribute** (An attribute data value that adds context using the `X59ParserSource`)
+/// 
+/// ## 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Label {
     pub pieces: Vec<String>,
