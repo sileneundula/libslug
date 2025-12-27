@@ -214,6 +214,11 @@ impl MLDSA3Signature {
             Err(SlugErrors::InvalidLengthFromBytes)
         }
     }
+    /// From Hexadecimal (Upper)
+    pub fn from_hex<T: AsRef<str>>(s_hex: T) -> Result<Vec<u8>,HexError> {
+        let decoded = hex::decode_upper(s_hex.as_ref().as_bytes())?;
+        Ok(decoded)
+    }
     /// as bytes (3309 bytes)
     pub fn as_bytes(&self) -> &[u8] {
         &self.signature

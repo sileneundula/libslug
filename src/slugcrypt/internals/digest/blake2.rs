@@ -26,6 +26,7 @@
 use blake2::*;
 use blake2::Digest;
 use blake2::digest::{Update,VariableOutput};
+use super::digest::SlugDigest;
 
 /// # BLAKE2B Hasher
 /// 

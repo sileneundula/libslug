@@ -10,6 +10,9 @@ pub use crate::slugcrypt::api::*;
 /// 
 /// - [X] AES256-GCM
 /// - [X] XCHACHA20-POLY1305 (Extended Nonce)
+/// 
+/// ## TODO
+/// - [ ] Add More Algorithms
 pub mod SymmetricEncryption {
     pub use crate::slugcrypt::api::SlugCrypt;
 }

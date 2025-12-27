@@ -1,0 +1,17 @@
+[package]
+name = "x59-fmt"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# Encoding
+slugencode = {version = "0.1.0", optional=true}
+
+# FixedStr
+fixedstr = "0.5.10"
+
+# Serialization
+serde = {version="1.0.0", features=["derive"], optional=true}
+
+# Error
+thiserror = "2.0.17"

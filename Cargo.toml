@@ -1,3 +1,7 @@
+[workspace]
+resolver = "3"
+members = ["x59pk-fmt"]
+
 [package]
 name = "libslug"
 version = "0.5.0"
@@ -28,7 +32,7 @@ argon2 = "0.5.3"
 # Security
 subtle = "2.6.1"
 subtle-encoding = "0.5.1"
-zeroize = "1.8.1"
+zeroize = "1.8.2"
 
 # Serialization
 serde = { version = "1.0.0", features=["derive"] }
@@ -62,14 +66,15 @@ pqcrypto-traits = "0.3.5"
 pqcrypto-falcon = "0.4.0"
 
 # Signatures
-ed25519-dalek = {version = "2.1.1", features=["rand_core"]}
-schnorrkel = "0.11.4"
+ed25519-dalek = {version = "2.2.0", features=["rand_core"]}
+schnorrkel = "0.11.5"
 ecdsa = "0.16.9"
 k256 = {version = "0.13.4", features=["ecdsa"]}
 ml-dsa = "0.0.4"
 ed448 = "0.4.0"
+ed448-goldilocks-plus = "0.16.0"
 
-# One-Time Signatures
+# /atropinetears/One-Time Signatures
 leslie_lamport = "0.3.1"
 winternitz-ots = "0.3.0"
 
@@ -82,3 +87,8 @@ hybrid-array-new = {package="hybrid-array", version="0.3.1"}
 serde-big-array = "0.5.1"
 
 dirs = "6.0.0"
+
+slugencode = "0.1.0"
+
+# Error Handling
+thiserror = "2.0.17"

@@ -1,6 +1,8 @@
 //! # Errors
 //! 
-//! This module contains all the error-handling.
+//! This module contains all the error-handling. It uses `thiserror` for error handling.
+
+use thiserror::Error;
 
 /// # SlugErrors
 /// 
@@ -10,6 +12,7 @@ pub enum SlugErrors {
     InvalidLengthFromBytes,
     SigningFailure,
     VerifyingError(SlugErrorAlgorithms),
+    Other(String),
 }
 
 #[derive(Debug)]
@@ -20,6 +23,7 @@ pub enum SlugErrorAlgorithms {
     SIG_SPHINCS_PLUS,
     SIG_FALCON,
     SIG_MLDSA,
+    SIG_SHULGINSIGNING,
     ENC_ECIES_ED25519,
     ENC_RSA,
     ENC_KYBER,
