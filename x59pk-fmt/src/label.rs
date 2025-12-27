@@ -84,10 +84,10 @@ use std::fmt;
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Label {
     pub pieces: Vec<String>,
-    pub attribute: Option<String>,
+    pub attribute: String,
 }
 
-/// # X59 Source
+/// # X59 Source (`@`)
 /// 
 /// The Source Parser. Defaults to X59 System and ecosystem.
 /// 
@@ -98,13 +98,24 @@ pub struct X59Label {
 /// - URL
 /// 
 /// - Registries
+/// 
+/// ## Example
+/// 
+/// `@git:<user>`
+/// 
+/// `@url:<url>`
+/// 
+/// `@source:<source_id>`
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Source {
     source: String,
-    provider: Option<String>,
+    parser_protocol: u16,
+    
+    communication_protocol: u8,
+    provider: String,
 }
 
-/// # Type of Data
+/// # Type of Data (`#`)
 /// 
 /// `#pk`
 /// 
@@ -113,14 +124,21 @@ pub struct X59Source {
 /// 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Type {
-    _lib: TypeLibrary,
+    lib: TypeLibrary,
     _type: String,
+}
+
+/// # X59 Constraint System
+/// 
+/// 
+pub struct X59Constraints {
+    constraint: String,
 }
 
 impl Default for X59Type {
     fn default() -> Self {
         X59Type {
-            _lib: TypeLibrary::default(),
+            lib: TypeLibrary::default(),
             _type: String::from("Raw"),
         }
     }
@@ -128,7 +146,7 @@ impl Default for X59Type {
 
 impl fmt::Display for X59Type {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Library: {}",&self._lib )
+        write!(f, "Library: {}",&self.lib)
     }
 }
 
@@ -141,9 +159,10 @@ pub enum TypeLibrary {
     Other(String),
 }
 
+/*
 impl fmt::Display for TypeLibrary {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if Self::X59std(0) == true {
+        if Self::X59std(0u16) == true {
             write!(f, "X59 Standard Library (Revision: 0x00)")
         }
         else if Self::X59std(1) == true {
@@ -158,8 +177,13 @@ impl fmt::Display for TypeLibrary {
         else {
             write!(f, "Unknown Library")
         }
+
+        if self::TypeLibrary::X59std(0u16) {
+            write!(f, "X59 Standard Library (Revision: 0x00)")
+        }
     }
 }
+    */
 
 impl Default for TypeLibrary {
     fn default() -> Self {
@@ -171,7 +195,8 @@ impl X59Source {
     /// # Parser Source
     pub fn new<T: AsRef<str>>(source: T) -> Self {
         return Self {
-            source: source.as_ref().to_string()
+            source: source.as_ref().to_string(),
+            provider: 
         }
     }
     pub fn as_source_label(&self) -> String {
@@ -218,7 +243,7 @@ impl X59Label {
 
         return Self {
             pieces: output,
-            attribute: Some(attribute.as_ref().to_string()),
+            attribute: attribute.as_ref().to_string(),
         }
     }
     /// # Add Piece To X59Label
@@ -235,6 +260,9 @@ impl X59Label {
             self.pieces.push(x.as_ref().to_string())
         }
     }
+    pub fn add_attribute<T: AsRef<str>>(&mut self, attribute: T) {
+        self.attribute = attribute.as_ref().to_string();
+    }
     pub fn new_with_configured<T: AsRef<str>>(pieces: Vec<T>, attribute: Option<String>) {
 
     }
@@ -246,7 +274,7 @@ impl X59Label {
         let mut i = 0usize;
         let mut length = self.pieces.len() - 1;
         
-        if self.attribute.is_none() {
+        if self.attribute == "" || self.attribute == " " {
             for x in &self.pieces {
                 output.push_str(x);
                 if i < length {
@@ -260,15 +288,22 @@ impl X59Label {
             return output
         }
         else {
-            /*
-            let attribute = Self::add_attribute(&self).expect("Failure In Attribute Assignment Due To No Attribute");
+            let attribute = Self::process_attribute(&self).expect("Failure In Attribute Assignment Due To No Attribute");
 
-            for i in self.pieces {
+            // Push (!..)
+            output.push_str(&attribute);
 
+            for x in &self.pieces {
+                output.push_str(x);
+                if i < length {
+                    output.push_str(DELIMITER);
+                    i = i + 1;
+                }
+                else {
+                    output.push_str(CLOSE);
+                }
             }
-
-*/
-            panic!("Attribute");
+            return output
         }
         
         
@@ -285,15 +320,15 @@ impl X59Label {
     /// ## Format
     /// 
     /// `(!<value>)` where value is some value and inside braces
-    fn add_attribute(&self) -> Result<String,Errors> {
+    fn process_attribute(&self) -> Result<String,Errors> {
         let mut output: String = String::new();
 
-        output.push_str(OPEN_PAR); // (
-        output.push_str(ATTRIBUTE_VALUE); // !
+        if self.attribute != "" || self.attribute != " " {
+            output.push_str(OPEN_PAR); // (
+            output.push_str(ATTRIBUTE_VALUE); // !
 
-        if self.attribute.is_some() == true {
-            output.push_str(&self.attribute.clone().unwrap());
-            output.push_str(CLOSE_PAR);   
+            output.push_str(&self.attribute);
+            output.push_str(CLOSE_PAR);
         }
         else {
             return Err(Errors::NoAttributeInLabel)
