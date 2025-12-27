@@ -1,12 +1,77 @@
+//! # X59 Data
+//! 
+//! TODO:
+//! 
+//! - [X] X59Label
+//!     - [X] Display
+//!     - [ ]
+//! - [X] X59Source (@)
+//!     - [ ] Source
+//! - [X] X59Type (#)
+//!     - [ ] Source
+
 use crate::constants::OPEN;
 use crate::constants::CLOSE;
 use crate::constants::*;
 
 use crate::errors::Errors;
 
+use std::fmt;
+
+/// # X59 Label
+/// 
+/// A Label that can be used to extend functionality of data.
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Label {
     pub pieces: Vec<String>,
     pub attribute: Option<String>,
+}
+
+/// # X59 Source
+/// 
+/// The Source Parser. Defaults to X59 System.
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
+pub struct X59Source {
+    source: String,
+}
+
+/// # Type of Data
+/// 
+/// `#pk`
+/// 
+/// `#peer`
+/// 
+/// 
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
+pub struct X59Type {
+    _type: String,
+}
+
+impl X59Source {
+    /// # Parser Source
+    pub fn new<T: AsRef<str>>(source: T) -> Self {
+        return Self {
+            source: source.as_ref().to_string()
+        }
+    }
+    pub fn as_source_label(&self) -> String {
+        let mut output: String = String::new();
+
+        output.push_str(OPEN);
+        output.push_str(SOURCE_SYMBOL);
+        output.push_str(&self.source);
+        output.push_str(CLOSE);
+
+        return output
+    }
+}
+
+impl Default for X59Source {
+    fn default() -> Self {
+        return Self {
+            source: String::from("X59System")
+        }
+    }
 }
 
 impl X59Label {
@@ -14,6 +79,20 @@ impl X59Label {
         return Self {
             pieces: Vec::new(),
             attribute: None,
+        }
+    }
+    pub fn from_str<T: AsRef<str>>(s_path: T, attribute: T) -> Self {
+        let x: Vec<&str> = s_path.as_ref().split("/").collect();
+
+        let mut output: Vec<String> = Vec::new();
+
+        for i in x {
+            output.push(i.to_owned());
+        }
+
+        return Self {
+            pieces: output,
+            attribute: Some(attribute.as_ref().to_string()),
         }
     }
     /// # Add Piece To X59Label
@@ -96,6 +175,14 @@ impl X59Label {
         return Ok(output)
     }
 }
+
+impl fmt::Display for X59Label {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let x = self.as_label();
+        write!(f, "{}",x)
+    }
+}
+
 
 #[test]
 fn label_test() {
