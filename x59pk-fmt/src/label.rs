@@ -1,5 +1,7 @@
 //! # X59 Data
 //! 
+//! Author: Joseph P. Tortorelli (Silene/0x20CB)
+//! 
 //! TODO:
 //! 
 //! - [X] X59Label
@@ -19,6 +21,8 @@ use crate::errors::Errors;
 use std::fmt;
 
 /// # X59 Label
+/// 
+/// The core component of `X59-fmt`, an *X59Label* functions to add context to values, including structured data in extensions.
 /// 
 /// A Label that can be used to extend functionality of data.
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
