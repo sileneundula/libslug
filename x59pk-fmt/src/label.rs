@@ -109,10 +109,9 @@ pub struct X59Label {
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Source {
     source: String,
-    parser_protocol: u16,
-    
-    communication_protocol: u8,
-    provider: String,
+    //parser_protocol: u32, // parser
+    //communication_protocol: u8, // comms
+    //provider: String, // provider
 }
 
 /// # Type of Data (`#`)
@@ -144,11 +143,13 @@ impl Default for X59Type {
     }
 }
 
+/*
 impl fmt::Display for X59Type {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Library: {}",&self.lib)
     }
 }
+*/    
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub enum TypeLibrary {
@@ -196,7 +197,6 @@ impl X59Source {
     pub fn new<T: AsRef<str>>(source: T) -> Self {
         return Self {
             source: source.as_ref().to_string(),
-            provider: 
         }
     }
     pub fn as_source_label(&self) -> String {
@@ -226,10 +226,10 @@ impl Default for X59Source {
 }
 
 impl X59Label {
-    pub fn new() -> Self {
+    pub fn new<T: AsRef<str>>(attribute: T) -> Self {
         return Self {
             pieces: Vec::new(),
-            attribute: None,
+            attribute: attribute.as_ref().to_string(),
         }
     }
     pub fn from_str<T: AsRef<str>>(s_path: T, attribute: T) -> Self {
@@ -263,9 +263,9 @@ impl X59Label {
     pub fn add_attribute<T: AsRef<str>>(&mut self, attribute: T) {
         self.attribute = attribute.as_ref().to_string();
     }
-    pub fn new_with_configured<T: AsRef<str>>(pieces: Vec<T>, attribute: Option<String>) {
-
-    }
+    /// # As Label
+    /// 
+    /// Exports to a label
     pub fn as_label(&self) -> String {
         let mut output: String = String::new();
 
@@ -310,9 +310,6 @@ impl X59Label {
         
 
     }
-    fn add_label_open() {
-
-    }
     /// # Add Attribute
     /// 
     /// Adds an Attribute onto a label
@@ -349,7 +346,7 @@ impl fmt::Display for X59Label {
 fn label_test() {
     let x = X59Label {
         pieces: vec![String::from("libslug"),String::from("shulginsigning"),String::from("v1")],
-        attribute: None,
+        attribute: String::from("assert"),
     };
     let output = x.as_label();
 
