@@ -1,0 +1,9 @@
+[package]
+name = "oint-keys"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+fixedstr = {version = "0.5.10", features=["serde"]}
+serde = {version="1.0.0", features=["derive"]}
+libslug = "0.5.0"

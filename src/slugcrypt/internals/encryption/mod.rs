@@ -8,14 +8,16 @@
 //! 
 //! This library includes the following:
 //! 
-//! - ECIES-Curve25519-silene (Elliptic Curve Public Key Encryption For Messages)
-//! - ML-KEM (Kyber1024) (will add Kyber768)
-//! 
-//! In the future, I plan to add:
-//! - RSA
+//! - [X] ECIES-Curve25519-silene (SHA3) (feature: `ecies-ed25519-sha3`) (Elliptic Curve Public Key Encryption For Messages)
+//! - [ ] ECIES-Curve25519-sha2
+//! - [X] ML-KEM (Kyber1024) (feature: `kyber1024`)
+//! - [ ] ML-KEM (Kyber768)
+//! - [ ] RSA
 
-/// ECIES over Curve25519
+#[cfg(feature = "ecies-ed25519-sha3")]
+/// ECIES over Curve25519 using SHA3 (ECIES-ED25519-Silene)
 pub mod ecies;
 
+#[cfg(feature = "kyber1024")]
 /// Module Lattice Key Encapsulation Encryption using ML_KEM (Kyber)
 pub mod ml_kem;

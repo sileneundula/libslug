@@ -32,6 +32,10 @@ use crate::errors::Errors;
 
 use std::fmt;
 
+use fixedstr::str64;
+use fixedstr::str256;
+use std::str::FromStr;
+
 /// # X59 Label
 /// 
 /// ## Description
@@ -83,8 +87,12 @@ use std::fmt;
 /// ```
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Label {
-    pub pieces: Vec<String>,
-    pub attribute: String,
+    pub pieces: Vec<str256>,
+    pub attribute: str256,
+}
+
+pub struct X59Value {
+    bytes: Vec<u8>,
 }
 
 /// # X59 Source (`@`)
@@ -106,12 +114,12 @@ pub struct X59Label {
 /// `@url:<url>`
 /// 
 /// `@source:<source_id>`
-#[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Source {
-    source: String,
-    //parser_protocol: u32, // parser
-    //communication_protocol: u8, // comms
-    //provider: String, // provider
+    source: str256,
+    parser_protocol: u32, // parser
+    communication_protocol: u8, // comms
+    provider: str256, // provider
 }
 
 /// # Type of Data (`#`)
@@ -124,7 +132,7 @@ pub struct X59Source {
 #[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct X59Type {
     lib: TypeLibrary,
-    _type: String,
+    _type: str64,
 }
 
 /// # X59 Constraint System
@@ -138,7 +146,7 @@ impl Default for X59Type {
     fn default() -> Self {
         X59Type {
             lib: TypeLibrary::default(),
-            _type: String::from("Raw"),
+            _type: str64::from_str("Raw").unwrap(),
         }
     }
 }
@@ -229,7 +237,7 @@ impl X59Label {
     pub fn new<T: AsRef<str>>(attribute: T) -> Self {
         return Self {
             pieces: Vec::new(),
-            attribute: attribute.as_ref().to_string(),
+            attribute: str256::from_str(attribute.as_ref()).unwrap(),
         }
     }
     pub fn from_str<T: AsRef<str>>(s_path: T, attribute: T) -> Self {

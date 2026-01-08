@@ -15,3 +15,7 @@ serde = {version="1.0.0", features=["derive"], optional=true}
 
 # Error
 thiserror = "2.0.17"
+
+[features]
+full = ["dep:slugencode","dep:serde"]
+default = []

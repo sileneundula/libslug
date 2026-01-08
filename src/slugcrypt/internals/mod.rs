@@ -15,9 +15,11 @@ pub mod encryption;
 /// Symmetric Encryption: XChaCha20-Poly1305, AES256GCM
 pub mod encrypt;
 
+#[cfg(feature = "csprng")]
 /// SlugCSPRNG: Cryptographically Secure Randomness
 pub mod csprng;
 
+#[cfg(feature = "bip39")]
 /// Determinstic BIP39
 pub mod bip39;
 

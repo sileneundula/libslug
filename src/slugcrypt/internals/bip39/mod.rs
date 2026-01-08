@@ -1,6 +1,19 @@
 //! # BIP39
 //! 
 //! This module contains all required operations and functionality to use BIP39, a word generator that uses a seed to produce the secret key of certain algorithms.
+//! 
+//! ## Features
+//! 
+//! - [X] `SlugMnemonic``
+//!     - [X] `fn New()`: Generates a new Mnemonic
+//!     - [X] `fn from_phrase()`: Constructs SlugMnemonic struct from phrase and wordlist
+//!     - [X] `fn to_mnemonic()`: Converts to bip39::Mnemonic
+//!     - [X] `fn to_seed()`: Takes a password and wordlist then converts to seed (Vec<u8>)
+//! 
+//! ## TODO
+//! 
+//! - [ ] Number of Words
+//! - [ ] Parsing
 
 use bip39::{Mnemonic, MnemonicType, Language, Seed,ErrorKind};
 use serde::{Serialize,Deserialize};
@@ -25,8 +38,8 @@ impl SlugMnemonic {
         }
     }
     /// From Phrase
-    pub fn from_phrase(phrase: &str, language: Language) -> Result<Self,ErrorKind> {
-        let phrase = Mnemonic::from_phrase(phrase, language)?.into_phrase();
+    pub fn from_phrase<T: AsRef<str>>(phrase: T, language: Language) -> Result<Self,ErrorKind> {
+        let phrase = Mnemonic::from_phrase(phrase.as_ref(), language)?.into_phrase();
 
         return Ok(Self {
             phrase: phrase,

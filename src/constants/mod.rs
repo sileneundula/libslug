@@ -1,6 +1,15 @@
 //! # Constants
 //! 
 //! This module contains all the needed constants.
+//! 
+//! ## List of Constants
+//! 
+//! ### ECIES-ED25519-Silene
+//! 
+//! - ECIES-ED25519-PK-SIZE: 32 bytes
+//! - ECIES-ED25519-SK-SIZE: 32 bytes
+//! 
+//! 
 
 
 // ECIES

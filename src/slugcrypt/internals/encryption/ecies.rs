@@ -9,6 +9,10 @@
 //! ## TODO
 //! 
 //! - Fix `Message`
+//! 
+//! - [ ] Add Export Functionality
+//! - [ ] Add Easier To Use Encodings
+//! - [ ] Add Different Sources of Entropy
 
 use std::string::FromUtf8Error;
 
@@ -32,15 +36,18 @@ use base58::{FromBase58,ToBase58,FromBase58Error};
 use rand::rngs::OsRng;
 //use rand::CryptoRng;
 
+/// PROTOCOL NAME FOR ECIES-ED25519
+pub const ECIES_PROTOCOL_NAME: &str = "ecies-ed25519-sha3";
+
 
 /// # ECIES Encrypt
 /// 
-/// ECIESEncrypt is the encryption struct for encrypting data using Curve25519
+/// ECIESEncrypt is the encryption struct for encrypting data using Curve25519 + SHA3
 pub struct ECIESEncrypt;
 
 /// # ECIES Decrypt
 /// 
-/// ECIESDecrypt is the decryption struct for decrypting data using Curve25519
+/// ECIESDecrypt is the decryption struct for decrypting data using Curve25519 + SHA3
 pub struct ECIESDecrypt;
 
 /// # ECPublicKey (ECIES-ED25519 Public Key For Encryption/Decryption)
@@ -77,7 +84,6 @@ pub struct ECPublicKey {
 /// - Encrypt
 /// - Decrypt
 /// - Get Public Key
-
 #[derive(Serialize,Deserialize)]
 pub struct ECSecretKey {
     pub secret_key: SecretKey,
@@ -125,6 +131,14 @@ impl ECPublicKey {
     /// from byte array of 32 bytes
     pub fn from_bytes(bytes: [u8;32]) -> Result<Self,Error> {
         let public_key = ecies_ed25519::PublicKey::from_bytes(&bytes)?;
+
+        return Ok(Self {
+            public_key
+        })
+    }
+    /// from byte slice
+    pub fn from_byte_slice(bytes: &[u8]) -> Result<Self,Error> {
+        let public_key = ecies_ed25519::PublicKey::from_bytes(bytes)?;
 
         return Ok(Self {
             public_key

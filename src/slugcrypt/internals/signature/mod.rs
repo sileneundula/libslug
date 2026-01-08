@@ -22,24 +22,31 @@
 //! 
 //! - [ ] Winternitz One-Time Signatures (WOTS)
 
+#[cfg(feature = "sphincs_plus")]
 /// SPHINCS+ (SHAKE256) (255bit security) (smaller signature version)
 pub mod sphincs_plus;
 
+#[cfg(feature = "ed25519")]
 /// ED25519 Signature
 pub mod ed25519;
 
-
+#[cfg(feature = "schnorr")]
 /// Schnorr Digital Signature
 pub mod schnorr;
 
+#[cfg(feature = "ecdsa")]
 /// ECDSA
 pub mod ecdsa;
 
+#[cfg(feature = "falcon")]
 /// FALCON1024
 pub mod falcon;
 
+#[cfg(feature = "ml-dsa")]
 /// MLDSA65
 pub mod ml_dsa;
+
+#[cfg(feature = "ed448")]
 
 /// ED448
 pub mod ed448;
@@ -52,5 +59,5 @@ pub mod hybridfalconsigning;
 
 
 /// One-Time Signatures (Lamport Signatures, Winternitz-OTS)
-//#[cfg(feature = "OTS")]
+#[cfg(feature = "experimental")]
 pub mod onetimesigs;

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["x59pk-fmt"]
+members = ["oint-keys","x59pk-fmt"]
 
 [package]
 name = "libslug"
@@ -17,17 +17,17 @@ repository = "https://github.com/sileneundula/libslug"
 [dependencies]
 # Curve25519 ECIES Encryption
 # ecies-ed25519 = {version = "0.5.1", features=["serde"]}
-ecies-ed25519 = {package="ecies-ed25519-silene", version="0.1.0", features=["serde"]}
+ecies-ed25519 = {package="ecies-ed25519-silene", version="0.1.0", features=["serde"], optional=true}
 
 # Randomness
-rand = "0.8.5"
-securerand-rs = "0.2.0"
+rand = {version = "0.8.5", optional=true}
+securerand-rs = {version="0.2.0", optional=true}
 
 # BIP39
-tiny-bip39 = "2.0.0"
+tiny-bip39 = { version="2.0.0", optional=true}
 
 # Password Deriviation
-argon2 = "0.5.3"
+argon2 = { version= "0.5.3",optional=true}
 
 # Security
 subtle = "2.6.1"
@@ -37,6 +37,7 @@ zeroize = "1.8.2"
 # Serialization
 serde = { version = "1.0.0", features=["derive"] }
 serde_yaml = "0.9.34"
+serde-big-array = "0.5.1"
 
 # Serialization Encryption
 serde-encrypt = "0.7.0"
@@ -46,37 +47,38 @@ base58 = "0.2.0"
 base32 = "0.5.1"
 
 # Digest
-tiny-keccak = {version = "2.0.2", features=["sha3","shake"]}
-sha2 = "0.10.8"
-blake2 = "0.10.6"
-digest = "0.10.7"
-blake3 = "1.6.1"
+tiny-keccak = {version = "2.0.2", features=["sha3","shake"], optional=true}
+sha2 = {version = "0.10.9", optional=true}
+blake2 = {version = "0.10.6", optional=true}
+digest = {version = "0.10.7", optional=true}
+blake3 = {version = "1.6.1", optional=true}
 
 # ML-KEM
-ml-kem = "0.2.1"
+ml-kem = {version = "0.2.1", optional=true}
 
 # Symmetric Encryption
-chacha20poly1305 = "0.10.1"
-aes-gcm = "0.10.3"
-morus = "0.1.3"
+chacha20poly1305 = {version = "0.10.1", optional=true}
+aes-gcm = {version = "0.10.3", optional=true}
+morus = {version="0.1.3", optional=true}
 
 # PQ Signatures
-pqcrypto-sphincsplus = "0.7.0"
-pqcrypto-traits = "0.3.5"
-pqcrypto-falcon = "0.4.0"
+pqcrypto-sphincsplus = { version = "0.7.2", optional=true}
+pqcrypto-traits = {version = "0.3.5", optional=true}
+pqcrypto-falcon = {version = "0.4.1", optional=true}
 
 # Signatures
-ed25519-dalek = {version = "2.2.0", features=["rand_core"]}
-schnorrkel = "0.11.5"
-ecdsa = "0.16.9"
-k256 = {version = "0.13.4", features=["ecdsa"]}
-ml-dsa = "0.0.4"
-ed448 = "0.4.0"
-ed448-goldilocks-plus = "0.16.0"
+ed25519-dalek = {version = "2.2.0", features=["rand_core"], optional=true}
+schnorrkel = {version = "0.11.5", optional=true}
+ecdsa = {version = "0.16.9", optional=true}
+k256 = {version = "0.13.4", features=["ecdsa"], optional=true}
+ml-dsa = {version = "0.0.4", optional=true}
+ed448 = {version = "0.4.0", optional=true}
+ed448-goldilocks-plus = {version = "0.16.0", optional=true}
+bls-signatures = {version = "0.15.0", optional=true}
 
 # /atropinetears/One-Time Signatures
-leslie_lamport = "0.3.1"
-winternitz-ots = "0.3.0"
+leslie_lamport = { version = "0.3.1", optional=true}
+winternitz-ots = {version= "0.3.0", optional=true}
 
 # PQ
 
@@ -84,11 +86,53 @@ winternitz-ots = "0.3.0"
 hybrid-array = "0.2.3"
 
 hybrid-array-new = {package="hybrid-array", version="0.3.1"}
-serde-big-array = "0.5.1"
 
-dirs = "6.0.0"
+dirs = {version = "6.0.0", optional=true}
 
 slugencode = "0.1.0"
 
 # Error Handling
 thiserror = "2.0.17"
+
+[features]
+default = ["full"]
+full = ["ecies-ed25519-sha3","kyber1024","aes256","xchacha20", "full-digests", "experimental", "full-signatures", "csprng", "bip39", "filesystem"]
+
+# Public Key Encryption
+ecies-ed25519-sha3 = ["dep:ecies-ed25519"]
+kyber1024 = ["dep:ml-kem"]
+
+# Symmetric Encryption
+aes256 = ["dep:aes-gcm"]
+xchacha20 = ["dep:chacha20poly1305"]
+morus = ["dep:morus"]
+
+# Hashing Algorithms
+sha3 = ["dep:tiny-keccak", "digest"]
+sha2 = ["dep:sha2", "digest"]
+blake2 = ["dep:blake2", "digest"]
+blake3 = ["dep:blake3", "digest"]
+digest = ["dep:digest"]
+
+# Signatures
+schnorr = ["dep:schnorrkel"]
+ed25519 = ["dep:ed25519-dalek"]
+ecdsa = ["dep:ecdsa","k256"]
+sphincs_plus = ["dep:pqcrypto-sphincsplus","dep:pqcrypto-traits"]
+falcon = ["dep:pqcrypto-falcon","dep:pqcrypto-traits"]
+ml-dsa = ["dep:ml-dsa"]
+ed448 = ["dep:ed448","dep:ed448-goldilocks-plus"]
+
+
+# Other
+bip39 = ["dep:tiny-bip39"]
+filesystem = ["dep:dirs"]
+csprng = ["dep:rand","dep:securerand-rs","dep:argon2"]
+
+# Containers
+full-digests = ["sha3","sha2","blake2","blake3","digest"]
+full-signatures = ["schnorr","ed25519","ecdsa","sphincs_plus","falcon","ml-dsa","ed448"]
+
+
+# Experimental
+experimental = ["dep:leslie_lamport","dep:winternitz-ots"]
