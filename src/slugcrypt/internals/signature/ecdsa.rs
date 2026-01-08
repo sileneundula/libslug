@@ -58,6 +58,9 @@ pub struct ECDSASignature(
     pub [u8;64]
 );
 
+#[derive(Clone,PartialEq,PartialOrd,Hash,Debug,Serialize,Deserialize,Zeroize,ZeroizeOnDrop)]
+pub struct ECDSASignatureRecoveryID(pub u8);
+
 
 // DO NOT IMPLEMENT FOR ECDSASIGNATURE
 
@@ -70,6 +73,12 @@ impl RecoverablePublicKey for ECDSASecretKey {
 }
 
 impl ECDSASignature {
+    pub fn as_bytes(&self) -> &[u8] {
+        return self.0.as_slice()
+    }
+    pub fn to_bytes(&self) -> Vec<u8> {
+        return self.0.to_vec()
+    }
     pub fn from_bytes(bytes: [u8;64]) -> Self {
         return Self(bytes)
     }
@@ -231,7 +240,7 @@ impl ECDSASecretKey {
     /// # Sign (Recoverable)
     /// 
     /// Sign using ECDSA.
-    pub fn sign_recoverable<T: AsRef<[u8]>>(&self, msg: T) -> Result<(ecdsa::Signature<Secp256k1>, ecdsa::RecoveryId), SlugErrors> {
+    pub fn sign_recoverable<T: AsRef<[u8]>>(&self, msg: T) -> Result<(ECDSASignature, ECDSASignatureRecoveryID), SlugErrors> {
         let signature = self.to_usable_type();
         
         let signingkey = match signature {
@@ -248,7 +257,14 @@ impl ECDSASecretKey {
 
         let output_bytes = output.0.to_bytes();
 
-        return Ok(output)
+        let recovery_id = output.1.to_byte();
+
+        let sig = ECDSASignature::from_slice(output_bytes.as_slice());
+
+        match sig {
+            Ok(v) => return Ok((v, ECDSASignatureRecoveryID(recovery_id))),
+            Err(_) => return Err(SlugErrors::SigningFailure),
+        }
     }
     /// # To SigningKey
     /// 
