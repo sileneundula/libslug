@@ -55,7 +55,7 @@ impl ECDSASignature {
             Err(_) => return Err(SlugErrors::InvalidLengthFromBytes)
         }
     }
-    /// # \[slugcrypt/signatures/ecdsa-secp256k1] From Base58
+    /// # \[slugcrypt/signatures/ecdsa-secp256k1/signature] From Base58
     /// 
     /// From Base58 format as a string
     pub fn from_base58<T: AsRef<str>>(s: T) -> Result<Self,SlugEncodingError> {
@@ -197,6 +197,17 @@ impl ECDSASecretKey {
             output_bytes.copy_from_slice(&final_bytes);
         }
         Ok(ECDSAPublicKey(output_bytes))
+    }
+    pub fn from_slice(bytes: &[u8]) -> Result<Self,SlugErrors> {
+        let mut output: [u8;32] = [0u8;32];
+        
+        if bytes.len() == 32 {
+            output.copy_from_slice(bytes);
+            Ok(Self(output))
+        }
+        else {
+            return Err(SlugErrors::InvalidLengthFromBytes)
+        }
     }
     pub fn from_base58<T: AsRef<str>>(s: T) -> Result<Self,SlugEncodingError> {
         let x = SlugEncodingUsage::new(SlugEncodings::Base58);
