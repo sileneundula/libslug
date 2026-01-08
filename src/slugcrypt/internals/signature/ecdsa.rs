@@ -7,6 +7,10 @@ use k256::ecdsa::{SigningKey, Signature, VerifyingKey};
 use k256::Secp256k1;
 use rand::rngs::OsRng;
 
+use serde::{Serialize,Deserialize};
+use zeroize::{Zeroize,ZeroizeOnDrop};
+use serde_big_array::BigArray;
+
 // SLUG ENCODE :TEMPNAME
 use slugencode::SlugEncodingUsage;
 use slugencode::SlugEncodings;
@@ -16,10 +20,43 @@ use crate::slugcrypt::traits::RecoverablePublicKey;
 
 use crate::errors::SlugErrors;
 
+/// # ECDSA Public Key (Secp256k1)
+/// 
+/// `Key-Size:` 32 bytes
+/// 
+/// `Encodings:` {Hexadecimal,Base58,Base32,Base32_unpadded,Base64,Base64_url_safe}
+/// 
+/// ## Description
+/// 
+/// ECDSA Public Key as 32 bytes
+#[derive(Clone,PartialEq,PartialOrd,Hash,Debug,Serialize,Deserialize,Zeroize,ZeroizeOnDrop)]
 pub struct ECDSAPublicKey(pub [u8;32]);
+/// # ECDSA Secret Key (Secp256k1)
+/// 
+/// `Key-Size:` 32 bytes
+/// 
+/// `Encodings:` {Hexadecimal,Base58,Base32,Base32_unpadded,Base64,Base64_url_safe}
+/// 
+/// ## Description
+/// 
+/// ECDSA Secret Key as 32 bytes
+#[derive(Clone,PartialEq,PartialOrd,Hash,Debug,Serialize,Deserialize,Zeroize,ZeroizeOnDrop)]
 pub struct ECDSASecretKey(pub [u8;32]);
 
-pub struct ECDSASignature(pub [u8;64]);
+/// # ECDSA Signature (Secp256k1)
+/// 
+/// `Key-Size:` 64 bytes
+/// 
+/// `Encodings:` {Hexadecimal,Base58,Base32,Base32_unpadded,Base64,Base64_url_safe}
+/// 
+/// ## Description
+/// 
+/// ECDSA Signature as 64 bytes
+#[derive(Clone,PartialEq,PartialOrd,Hash,Debug,Serialize,Deserialize,Zeroize,ZeroizeOnDrop)]
+pub struct ECDSASignature(
+    #[serde(with = "BigArray")]
+    pub [u8;64]
+);
 
 
 // DO NOT IMPLEMENT FOR ECDSASIGNATURE
