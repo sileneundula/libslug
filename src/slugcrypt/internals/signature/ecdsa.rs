@@ -7,6 +7,11 @@ use k256::ecdsa::{SigningKey, Signature, VerifyingKey};
 use k256::Secp256k1;
 use rand::rngs::OsRng;
 
+// SLUG ENCODE :TEMPNAME
+use slugencode::SlugEncodingUsage;
+use slugencode::SlugEncodings;
+use slugencode::errors::SlugEncodingError;
+
 use crate::slugcrypt::traits::RecoverablePublicKey;
 
 use crate::errors::SlugErrors;
@@ -15,6 +20,9 @@ pub struct ECDSAPublicKey(pub [u8;32]);
 pub struct ECDSASecretKey(pub [u8;32]);
 
 pub struct ECDSASignature(pub [u8;64]);
+
+
+// DO NOT IMPLEMENT FOR ECDSASIGNATURE
 
 impl RecoverablePublicKey for ECDSAPublicKey {
 
@@ -45,6 +53,19 @@ impl ECDSASignature {
         match x {
             Ok(v) => Ok(v),
             Err(_) => return Err(SlugErrors::InvalidLengthFromBytes)
+        }
+    }
+    /// # \[slugcrypt/signatures/ecdsa-secp256k1] From Base58
+    /// 
+    /// From Base58 format as a string
+    pub fn from_base58<T: AsRef<str>>(s: T) -> Result<Self,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base58);
+        let output = x.decode(s.as_ref())?;
+        let output = Self::from_slice(&output)
+
+        match output {
+            Ok(v) => return Ok(v),
+            Err(_) => return Err(SlugEncodingError::DecodingError)
         }
     }
 }
