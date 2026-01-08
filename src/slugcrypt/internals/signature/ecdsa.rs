@@ -7,12 +7,22 @@ use k256::ecdsa::{SigningKey, Signature, VerifyingKey};
 use k256::Secp256k1;
 use rand::rngs::OsRng;
 
+use crate::slugcrypt::traits::RecoverablePublicKey;
+
 use crate::errors::SlugErrors;
 
 pub struct ECDSAPublicKey(pub [u8;32]);
 pub struct ECDSASecretKey(pub [u8;32]);
 
 pub struct ECDSASignature(pub [u8;64]);
+
+impl RecoverablePublicKey for ECDSAPublicKey {
+
+}
+
+impl RecoverablePublicKey for ECDSASecretKey {
+
+}
 
 impl ECDSASignature {
     pub fn from_bytes(bytes: [u8;64]) -> Self {

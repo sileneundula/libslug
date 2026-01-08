@@ -1,6 +1,25 @@
 //use crate::slugfmt::certificate::cert::X59Certificate;
 use crate::slugfmt::x59cert::X59Cert;
 
+/// # Recoverable Public Key
+/// 
+/// This type can recover its public key from its secret key.
+pub trait RecoverablePublicKey {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 pub trait Signature {
 
 }
