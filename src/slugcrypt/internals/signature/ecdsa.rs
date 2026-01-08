@@ -155,6 +155,60 @@ impl ECDSASignature {
             Err(_) => return Err(SlugEncodingError::DecodingError)
         }
     }
+    pub fn to_hex(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Hex);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base32(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base32);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base32_unpadded(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base32unpadded);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base58(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base58);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base64(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base64);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base64_url_safe(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base64urlsafe);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
 }
 
 impl ECDSASecretKey {
@@ -306,6 +360,60 @@ impl ECDSASecretKey {
             Err(_) => return Err(SlugEncodingError::DecodingError)
         }
     }
+    pub fn to_hex(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Hex);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base32(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base32);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base32_unpadded(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base32unpadded);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base58(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base58);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base64(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base64);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base64_url_safe(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base64urlsafe);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
 }
 
 impl ECDSAPublicKey {
@@ -332,14 +440,6 @@ impl ECDSAPublicKey {
     pub fn to_usable_type(&self) -> Result<VerifyingKey,ecdsa::Error> {
         let key: ecdsa::VerifyingKey<Secp256k1> = VerifyingKey::from_sec1_bytes(&self.0)?;
         return Ok(key)
-    }
-    pub fn verify<T: AsRef<[u8]>>(&self, msg: T, signature: ECDSASignature) -> Result<bool,SlugErrors> {
-        let x = self.to_usable_type()?;
-        let signature = signature.into_usable_type()?;
-
-    }
-    pub fn verify_recoverable<T: AsRef<[u8]>>(&self, msg: T, signature: ECDSASignature) {
-
     }
     pub fn from_base58<T: AsRef<str>>(s: T) -> Result<Self,SlugEncodingError> {
         let x = SlugEncodingUsage::new(SlugEncodings::Base58);
@@ -399,6 +499,60 @@ impl ECDSAPublicKey {
         match output {
             Ok(v) => return Ok(v),
             Err(_) => return Err(SlugEncodingError::DecodingError)
+        }
+    }
+    pub fn to_hex(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Hex);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base32(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base32);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base32_unpadded(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base32unpadded);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base58(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base58);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base64(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base64);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
+        }
+    }
+    pub fn to_base64_url_safe(&self) -> Result<String,SlugEncodingError> {
+        let x = SlugEncodingUsage::new(SlugEncodings::Base64urlsafe);
+        let output = x.encode(&self.0);
+        
+        match output {
+            Ok(v) => Ok(v),
+            Err(_) => return Err(SlugEncodingError::EncodingError)
         }
     }
 }
