@@ -24,7 +24,14 @@ use crate::errors::SlugErrors;
 /// 
 /// `Key-Size:` 32 bytes
 /// 
-/// `Encodings:` {Hexadecimal,Base58,Base32,Base32_unpadded,Base64,Base64_url_safe}
+/// ### Encodings
+/// 
+/// - [X] Hexadecimal
+/// - [X] Base58
+/// - [X] Base32
+/// - [X] Base32_unpadded
+/// - [X] Base64
+/// - [X] Base64_url_safe
 /// 
 /// ## Description
 /// 
@@ -35,7 +42,14 @@ pub struct ECDSAPublicKey(pub [u8;32]);
 /// 
 /// `Key-Size:` 32 bytes
 /// 
-/// `Encodings:` {Hexadecimal,Base58,Base32,Base32_unpadded,Base64,Base64_url_safe}
+/// ### Encodings
+/// 
+/// - [X] Hexadecimal
+/// - [X] Base58
+/// - [X] Base32
+/// - [X] Base32_unpadded
+/// - [X] Base64
+/// - [X] Base64_url_safe
 /// 
 /// ## Description
 /// 
@@ -47,7 +61,14 @@ pub struct ECDSASecretKey(pub [u8;32]);
 /// 
 /// `Key-Size:` 64 bytes
 /// 
-/// `Encodings:` {Hexadecimal,Base58,Base32,Base32_unpadded,Base64,Base64_url_safe}
+/// ### Encodings
+/// 
+/// - [X] Hexadecimal
+/// - [X] Base58
+/// - [X] Base32
+/// - [X] Base32_unpadded
+/// - [X] Base64
+/// - [X] Base64_url_safe
 /// 
 /// ## Description
 /// 
