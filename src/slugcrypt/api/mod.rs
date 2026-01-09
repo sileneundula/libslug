@@ -168,12 +168,12 @@ impl SlugDigest {
 impl SlugAsyCrypt {
     // Encrypt using ECIES-ED25519-Silene
     pub fn encrypt<T: AsRef<[u8]>>(pk: ECPublicKey, data: T) -> Result<super::internals::ciphertext::CipherText, ecies_ed25519::Error> {
-        let ct: Result<super::internals::ciphertext::CipherText, ecies_ed25519::Error> = ECIESEncrypt::encrypt(pk, data.as_ref());
+        let ct: Result<super::internals::ciphertext::CipherText, ecies_ed25519::Error> = ECIESEncrypt::encrypt(&pk, data.as_ref());
         return ct
     }
     // Decrypt Using ECIES-ED25519-Silene
     pub fn decrypt(sk: ECSecretKey, ct: CipherText) -> Result<super::internals::messages::Message, ecies_ed25519::Error> {
-        let x: Result<super::internals::messages::Message, ecies_ed25519::Error> = ECIESDecrypt::decrypt(sk, ct);
+        let x: Result<super::internals::messages::Message, ecies_ed25519::Error> = ECIESDecrypt::decrypt(&sk, ct);
         return x
     }
 }

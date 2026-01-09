@@ -11,10 +11,9 @@
 //! - Fix `Message`
 //! 
 //! - [ ] Add Export Functionality
-//! - [ ] Add Easier To Use Encodings
 //! - [ ] Add Different Sources of Entropy
 //! 
-//! ## ECIES
+//! ## ECIES Supported Encodings
 //! 
 //! - [X] Hex
 //! - [X] Base32
@@ -48,9 +47,16 @@ use slugencode::errors::SlugEncodingError;
 use rand::rngs::OsRng;
 //use rand::CryptoRng;
 
-/// PROTOCOL NAME FOR ECIES-ED25519
-pub const ECIES_PROTOCOL_NAME: &str = "ecies-ed25519-sha3";
-
+pub mod protocol_info {
+    /// PROTOCOL NAME FOR ECIES-ED25519
+    pub const ECIES_PROTOCOL_NAME: &str = "ecies-ed25519-sha3";
+    pub const ECIES_ED25519_PUBLIC_KEY_SIZE: usize = 32;
+    pub const ECIES_ED25519_SECRET_KEY_SIZE: usize = 32;
+    pub const ECIES_CURVE: &str = "CURVE25519";
+    pub const SYMMETRIC_ENCRYPTION: &str = "AES256-GCM";
+    pub const HASH_DERIVIATION: &str = "SHA3";
+    pub const RANDOMNESS_SOURCES: &str = "OSCSPRNG";
+}
 
 /// # ECIES Encrypt
 /// 
@@ -109,7 +115,7 @@ impl ECIESEncrypt {
     /// Encryption via a public key and a message.
     /// 
     /// **Randomness:** Uses operating system randomness to encrypt.
-    pub fn encrypt<T: AsRef<[u8]>>(pk: ECPublicKey, msg: T) -> Result<CipherText,Error>  {
+    pub fn encrypt<T: AsRef<[u8]>>(pk: &ECPublicKey, msg: T) -> Result<CipherText,Error>  {
         let mut csprng = OsRng;
 
         let ciphertext = ecies_ed25519::encrypt(&pk.public_key, msg.as_ref(), &mut csprng)?;
@@ -124,7 +130,7 @@ impl ECIESDecrypt {
     /// ## Description
     /// 
     /// Decryption via a secret key and a ciphertext. Decodes to `Message` struct, a vec.
-    pub fn decrypt(sk: ECSecretKey, ciphertext: CipherText) -> Result<Message,Error> {
+    pub fn decrypt(sk: &ECSecretKey, ciphertext: CipherText) -> Result<Message,Error> {
         let decoded_msg = ecies_ed25519::decrypt(&sk.secret_key, ciphertext.as_bytes())?;
 
         Ok(Message::new(decoded_msg))
@@ -317,7 +323,7 @@ impl ECSecretKey {
     }
     /// Decrypt message using ECIES-ED25519 returning a Message struct
     pub fn decrypt(self, ciphertext: CipherText) -> Result<Message,Error> {
-        ECIESDecrypt::decrypt(self, ciphertext)
+        ECIESDecrypt::decrypt(&self, ciphertext)
     }
     /// To Hex String (Upper)
     pub fn to_hex_string(&self) -> Result<String,FromUtf8Error> {
