@@ -23,6 +23,9 @@ pub mod csprng;
 /// Determinstic BIP39
 pub mod bip39;
 
+#[cfg(feature = "bip32")]
+pub mod bip32;
+
 /// Message Type
 pub mod messages;
 

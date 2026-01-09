@@ -91,12 +91,16 @@ dirs = {version = "6.0.0", optional=true}
 
 slugencode = "0.1.0"
 
+bip32 = { version = "0.5.3", optional=true}
+
 # Error Handling
 thiserror = "2.0.17"
 
+fixedstr = {version="0.5.10",features=["serde"]}
+
 [features]
 default = ["full"]
-full = ["ecies-ed25519-sha3","kyber1024","aes256","xchacha20", "full-digests", "experimental", "full-signatures", "csprng", "bip39", "filesystem"]
+full = ["ecies-ed25519-sha3","kyber1024","aes256","xchacha20", "full-digests", "experimental", "full-signatures", "csprng", "bip39", "filesystem","bip32"]
 
 # Public Key Encryption
 ecies-ed25519-sha3 = ["dep:ecies-ed25519"]
@@ -126,6 +130,7 @@ ed448 = ["dep:ed448","dep:ed448-goldilocks-plus"]
 
 # Other
 bip39 = ["dep:tiny-bip39"]
+bip32 = ["dep:bip32"]
 filesystem = ["dep:dirs"]
 csprng = ["dep:rand","dep:securerand-rs","dep:argon2"]
 
