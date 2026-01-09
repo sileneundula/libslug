@@ -27,6 +27,39 @@ It extends to include development of modern, decentralized PKI systems and modul
 - **Encryption:** AES-GCM 256 + XChaCha20-Poly1305
 - **Randomness Generation:** Supports Randomness Generation from the Operating System. Supports VRFs via Schnorr
 
+## Progress On Signatures
+
+### Classical
+
+- [X] \[Signature] ED25519-dalek
+  - [X] Generation
+    - [X] OSCSPRNG
+    - [X] Securerand-rs
+  - [X] Signing
+  - [X] Verifying
+
+### Post-Quantum
+
+- [X] \[Signature] FALCON1024
+  - [X] Generation
+    - [X] OSCSPRNG
+  - [X] silene/slugencode
+  - [X] Signing
+  - [X] Verifying
+  - [X] Serialization/Deserialization
+  - [X] Zeroize
+  - [X] Protocol Info
+  - [ ] Derive Public Key From Secret
+- [X] \[Signature] SPHINCS+ (SHAKE256) Level 5
+  - [X] Generation
+    - [X] OSCSPRNG
+  - [X] Signing
+  - [X] Verifying
+  - [X] Serialization/Deserialization
+  - [X] Zeroize
+  - [ ] Protocol Info
+  - [ ] Other
+    - [ ] Derive Public Key From Secret  
 ## X59Registar
 
 X59Registar is a novel project being developed for decentralized public-key infrastructures using the X59CERT format in YAML.
