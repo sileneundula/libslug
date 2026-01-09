@@ -130,7 +130,7 @@ impl ECIESDecrypt {
     /// ## Description
     /// 
     /// Decryption via a secret key and a ciphertext. Decodes to `Message` struct, a vec.
-    pub fn decrypt(sk: &ECSecretKey, ciphertext: CipherText) -> Result<Message,Error> {
+    pub fn decrypt(sk: &ECSecretKey, ciphertext: &CipherText) -> Result<Message,Error> {
         let decoded_msg = ecies_ed25519::decrypt(&sk.secret_key, ciphertext.as_bytes())?;
 
         Ok(Message::new(decoded_msg))
@@ -322,8 +322,8 @@ impl ECSecretKey {
         return Ok(CipherText::from_bytes(&ciphertext))
     }
     /// Decrypt message using ECIES-ED25519 returning a Message struct
-    pub fn decrypt(self, ciphertext: CipherText) -> Result<Message,Error> {
-        ECIESDecrypt::decrypt(&self, ciphertext)
+    pub fn decrypt(self, ciphertext: &CipherText) -> Result<Message,Error> {
+        ECIESDecrypt::decrypt(&self, &ciphertext)
     }
     /// To Hex String (Upper)
     pub fn to_hex_string(&self) -> Result<String,FromUtf8Error> {

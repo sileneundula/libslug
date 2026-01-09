@@ -173,7 +173,7 @@ impl SlugAsyCrypt {
     }
     // Decrypt Using ECIES-ED25519-Silene
     pub fn decrypt(sk: ECSecretKey, ct: CipherText) -> Result<super::internals::messages::Message, ecies_ed25519::Error> {
-        let x: Result<super::internals::messages::Message, ecies_ed25519::Error> = ECIESDecrypt::decrypt(&sk, ct);
+        let x: Result<super::internals::messages::Message, ecies_ed25519::Error> = ECIESDecrypt::decrypt(&sk, &ct);
         return x
     }
 }
