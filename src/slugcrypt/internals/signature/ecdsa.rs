@@ -287,6 +287,26 @@ impl ECDSASecretKey {
             Err(_) => return Err(SlugErrors::SigningFailure),
         }
     }
+    pub fn sign<T: AsRef<[u8]>>(&self, msg: T) -> Result<(ECDSASignature, ECDSASignatureRecoveryID), SlugErrors> {
+        let pk = self.to_usable_type();
+
+        let x: ecdsa::SigningKey<Secp256k1> = match pk {
+            Ok(v) => v,
+            Err(_) => return Err(SlugErrors::SigningFailure)
+        };
+
+        let signature = x.sign_prehash_recoverable(msg.as_ref());
+        
+        let output = match signature {
+            Ok(v) => v,
+            Err(_) => return Err(SlugErrors::SigningFailure)
+        };
+
+        let signature_output = ECDSASignature::from_bytes(&output.0.to_bytes());
+        let recovery_id = ECDSASignatureRecoveryID(output.1.to_byte());
+
+        return Ok((signature_output,recovery_id))
+    }
     /// # To SigningKey
     /// 
     /// Converts To Signing Key
