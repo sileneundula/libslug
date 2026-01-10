@@ -20,10 +20,10 @@ fn main() {
     
 
     // Ciphertext For Bob to Decrypt (does not use secret key)
-    let ciphertext = ECIESEncrypt::encrypt(pk_bob, msg_alice);
+    let ciphertext = ECIESEncrypt::encrypt(&pk_bob, msg_alice);
 
     // Decode Using Bob's Secret Key
-    let decoded_message = ECIESDecrypt::decrypt(sk_bob, ciphertext.unwrap());
+    let decoded_message = ECIESDecrypt::decrypt(&sk_bob, &ciphertext.unwrap());
 
     // Message (as UTF-8 str)
     let message_as_utf8 = decoded_message.unwrap().message().unwrap().to_string();

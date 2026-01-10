@@ -1,3 +1,28 @@
+//! # \[libslug/signatures/ecdsa:k256] Secp256k1 ECDSA Signatures
+//! 
+//! ## Description
+//! 
+//! ECDSA signatures using Secp256k1
+//! 
+//! ## Features
+//! 
+//! - [X] Generation
+//!     - [X] OSCSPRNG
+//! - [X] Signing
+//!     - [X] Sign
+//!     - [X] Sign (prehashed)
+//! - [X] Verifying
+//!     - [X] Verify
+//! - [X] Encodings
+//!     - [X] Hex
+//!     - [X] Base32
+//!     - [X] Base58
+//!     - [X] Base64
+//! - [X] Serialization
+//! - [X] Zeroize
+//! - [X] Other
+//!     - [X] Derive Public Key From Secret
+
 //use ecdsa::signature::Keypair;
 use ecdsa::PrimeCurve;
 use ecdsa::signature::Signer;
@@ -5,6 +30,7 @@ use ecdsa::signature::RandomizedSigner;
 use ecdsa::signature::Keypair;
 use k256::ecdsa::{SigningKey, Signature, VerifyingKey};
 use k256::Secp256k1;
+use k256::ecdsa::signature::Verifier;
 use rand::rngs::OsRng;
 
 use serde::{Serialize,Deserialize};
@@ -94,6 +120,9 @@ impl RecoverablePublicKey for ECDSASecretKey {
 }
 
 impl ECDSASignature {
+    pub fn verify<T: AsRef<[u8]>>(&self, bytes: T, pk: ECDSAPublicKey) -> Result<bool,SlugErrors> {
+        return pk.verify(bytes.as_ref(), self.clone())
+    }
     pub fn as_bytes(&self) -> &[u8] {
         return self.0.as_slice()
     }
@@ -261,7 +290,7 @@ impl ECDSASecretKey {
     /// # Sign (Recoverable)
     /// 
     /// Sign using ECDSA.
-    pub fn sign_recoverable<T: AsRef<[u8]>>(&self, msg: T) -> Result<(ECDSASignature, ECDSASignatureRecoveryID), SlugErrors> {
+    pub fn sign<T: AsRef<[u8]>>(&self, msg: T) -> Result<(ECDSASignature, ECDSASignatureRecoveryID), SlugErrors> {
         let signature = self.to_usable_type();
         
         let signingkey = match signature {
@@ -287,7 +316,7 @@ impl ECDSASecretKey {
             Err(_) => return Err(SlugErrors::SigningFailure),
         }
     }
-    pub fn sign<T: AsRef<[u8]>>(&self, msg: T) -> Result<(ECDSASignature, ECDSASignatureRecoveryID), SlugErrors> {
+    pub fn sign_prehash<T: AsRef<[u8]>>(&self, msg: T) -> Result<(ECDSASignature, ECDSASignatureRecoveryID), SlugErrors> {
         let pk = self.to_usable_type();
 
         let x: ecdsa::SigningKey<Secp256k1> = match pk {
@@ -302,7 +331,7 @@ impl ECDSASecretKey {
             Err(_) => return Err(SlugErrors::SigningFailure)
         };
 
-        let signature_output = ECDSASignature::from_bytes(&output.0.to_bytes());
+        let signature_output = ECDSASignature::from_slice(&output.0.to_bytes())?;
         let recovery_id = ECDSASignatureRecoveryID(output.1.to_byte());
 
         return Ok((signature_output,recovery_id))
@@ -474,6 +503,30 @@ impl ECDSASecretKey {
 }
 
 impl ECDSAPublicKey {
+    pub fn verify<T: AsRef<[u8]>>(&self, bytes: T, signature: ECDSASignature) -> Result<bool,SlugErrors> {
+        let x: Result<ecdsa::VerifyingKey<Secp256k1>, ecdsa::Error> = self.to_usable_type();
+
+        let pk: ecdsa::VerifyingKey<Secp256k1> = match x {
+            Ok(v) => v,
+            Err(_) => return Err(SlugErrors::VerifyingError(crate::errors::SlugErrorAlgorithms::SIG_SCHNORR))
+        };
+
+        let sig: Result<ecdsa::Signature<Secp256k1>, SlugErrors> = signature.into_usable_type();
+
+        let signature_output = match sig {
+            Ok(v) => v,
+            Err(_) => return Err(SlugErrors::VerifyingError(crate::errors::SlugErrorAlgorithms::ENC_ECIES_ED25519))
+        };
+        
+        let is_valid = pk.verify(bytes.as_ref(), &signature_output);
+
+        if is_valid.is_ok() {
+            return Ok(true)
+        }
+        else {
+            return Ok(false)
+        }
+    }
     pub fn as_bytes(&self) -> &[u8] {
         return &self.0
     }
@@ -618,5 +671,12 @@ impl ECDSAPublicKey {
 
 #[test]
 fn ECDSA() {
-    ECDSASecretKey::generate();
+    let key = ECDSASecretKey::generate();
+    let pk = key.public_key().unwrap();
+    let signature = key.sign("Hello World!").unwrap();
+
+    let is_valid = pk.verify("Hello World!", signature.0);
+
+    println!("{}",is_valid.unwrap())
+
 }

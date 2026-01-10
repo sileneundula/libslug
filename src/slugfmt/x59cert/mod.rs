@@ -13,27 +13,11 @@
 //!     - [X] Signing the digest of the public key
 //!     - [ ] Signing a request from a server or peer to peer application
 
-use crate::slugcrypt::traits::X59Certificate;
 use crate::slugcrypt::api::SlugDigest;
 
 pub mod storage;
 
-
-
-/// # [silene/slugfmt/x59cert] X59Cert
-/// 
-/// Contains the Public Key as a generic.
-pub struct X59Cert<T: X59Certificate + Clone> {
-    pub pkh: T,
-}
-
 // TODO: Add implementation
-
-impl X59Certificate for X59Cert {
-    fn into_certificate<T: X59Certificate>(&self) -> X59Cert<T> {
-        
-    }
-}
 
 pub struct X59CertLocalMetadata {
     pub local_id: String, // 6-bytes

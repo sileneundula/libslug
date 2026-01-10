@@ -44,8 +44,6 @@ use serde::{Serialize,Deserialize};
 use crate::slugcrypt::internals::bip39::SlugMnemonic;
 use crate::slugcrypt::internals::csprng::SlugCSPRNG;
 use crate::errors::SlugErrors;
-use crate::slugcrypt::traits::X59Certificate;
-use crate::slugfmt::x59cert::X59Cert;
 use subtle_encoding::hex;
 use subtle_encoding::Error;
 
@@ -269,14 +267,6 @@ impl ED25519Signature {
     pub fn from_hex_string<T: AsRef<str>>(hex_str: T) -> Result<Vec<u8>,Error> {
         let bytes = hex::decode_upper(hex_str.as_ref().as_bytes())?;
         Ok(bytes)
-    }
-}
-
-impl X59Certificate for ED25519PublicKey {
-    fn into_certificate<T: X59Certificate>(&self) -> X59Cert::<ED25519PublicKey> {
-        X59Cert {
-            pkh: self.clone()
-        }
     }
 }
 

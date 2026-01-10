@@ -1,5 +1,4 @@
 //use crate::slugfmt::certificate::cert::X59Certificate;
-use crate::slugfmt::x59cert::X59Cert;
 
 /// # Recoverable Public Key
 /// 
@@ -38,17 +37,6 @@ pub trait Hashing {
 
 pub trait Rand {
 
-}
-
-pub trait X59Certificate {
-    /// # Into Certificate
-    /// 
-    /// This converts the keypair into an X59Certificate.
-    /// 
-    /// ```rust
-    /// 
-    /// ```
-    fn into_certificate<T: X59Certificate>(&self) -> X59Cert<T>;
 }
 
 pub trait X59Signature {
